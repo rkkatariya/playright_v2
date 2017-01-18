@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
@@ -73,23 +74,6 @@ public class DashboardServlet extends HttpServlet {
 
     private User loggedInUser;
 
-    protected Connection conn;
-
-    public DashboardServlet() {
-        conn = DBConnectionManager.getConnection();
-        logger.debug("getConnection::" + conn.toString());
-    }
-
-//    public void close() {
-//        if (conn != null) {
-//            try {
-//                conn.close();
-//                logger.debug("closeConnection::" + conn.toString());
-//            } catch (SQLException ex) {
-//                logger.fatal("There was an error closing database connection." + ex);
-//            }
-//        }
-//    }
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -361,7 +345,7 @@ public class DashboardServlet extends HttpServlet {
                     case "getLanguageAnalytics":
                         selectedDateRange = request.getParameter("selectedDateRange");
                         inputFromDate = request.getParameter("inputFromDate");
-                        inputToDate = request.getParameter("inputToDate");                        
+                        inputToDate = request.getParameter("inputToDate");
                         if (inputFromDate != "" || inputToDate != "") {
                             Date inptFromDate = dateFormatr.parse(inputFromDate);
                             Date inptToDate = dateFormatr.parse(inputToDate);
@@ -389,7 +373,7 @@ public class DashboardServlet extends HttpServlet {
                             //  if (selectedDateRange != null) {
                             pcd = dashboardDao.getEditionVsArticles(ChartsUtil.DateRanges.valueOf(selectedDateRange));
                             // }
-                        }                        
+                        }
                         jsonArray = gson.toJson(pcd);
                         break;
                     case "getJournalistDistribution":
@@ -406,7 +390,7 @@ public class DashboardServlet extends HttpServlet {
                             //  if (selectedDateRange != null) {
                             pcd = dashboardDao.getJournalistDistribution(ChartsUtil.DateRanges.valueOf(selectedDateRange));
                             // }
-                        }                          
+                        }
                         jsonArray = gson.toJson(pcd);
                         break;
                     case "getTopEnglishPrintDistribution":
@@ -423,7 +407,7 @@ public class DashboardServlet extends HttpServlet {
                             //  if (selectedDateRange != null) {
                             bcd = dashboardDao.getTopEnglishPrintDistribution(ChartsUtil.DateRanges.valueOf(selectedDateRange));
                             // }
-                        }                          
+                        }
                         jsonArray = gson.toJson(bcd);
                         break;
                     case "getTopVernacularPrintDistribution":
@@ -440,19 +424,18 @@ public class DashboardServlet extends HttpServlet {
                             //  if (selectedDateRange != null) {
                             bcd = dashboardDao.getTopVernacularPrintDistribution(ChartsUtil.DateRanges.valueOf(selectedDateRange));
                             // }
-                        }                         
+                        }
                         jsonArray = gson.toJson(bcd);
                         break;
                     case "sendEmail":
                         to = request.getParameter("inputEmailAddress");
-                        from = "revvster@gmail.com";
                         subject = request.getParameter("inputSubject");
                         String body = null;
                         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
                         Date fromDate = dateFormatter.parse(request.getParameter("inputFromDate"));
                         Date toDate = dateFormatter.parse(request.getParameter("inputToDate"));
-                        Timestamp inputFrom = new Timestamp(fromDate.getTime());
-                        Timestamp inputTo = new Timestamp(toDate.getTime());
+                        inputFromDate = fromDate.toString();
+                        inputToDate = toDate.toString();
                         // String[] inputEdition = {};
                         String inputEdition = "";
                         // String[] inputLanguage = {};
@@ -473,96 +456,24 @@ public class DashboardServlet extends HttpServlet {
                         if (request.getParameter("inputNewsPaper") != null) {
                             inputNewsPaper = request.getParameter("inputNewsPaper");
                         }
-                        Statement stmt = null;
-                        ResultSet res = null;
-                        String selectDate;
-                        selectDate = "select ad.* from analytics_data ad \n"
-                                + "where ad.news_date between '" + inputFrom + "' and '" + inputTo + "' \n";
-                        String language = inputLanguage != ""
-                                ? "and ad.language = '" + inputLanguage + "'\n" : "";
-                        String edition = inputEdition != ""
-                                ? "and ad.edition = '" + inputEdition + "'\n" : "";
-                        String source = inputSource != ""
-                                ? "and ad.source = '" + inputSource + "' \n" : "";
-                        String newsPaper = inputNewsPaper != ""
-                                ? "and ad.news_paper = '" + inputNewsPaper + "'\n" : "";
-                        String query = (selectDate + language + edition
-                                + source + newsPaper);
-                        stmt = conn.createStatement();
-                        res = stmt.executeQuery(query);
-                       // body = "<p><img src=\"../images/text_logo_white.png\" width=\"50\" height=\"50\"></img></p>";
-                        body = "<h2 style='color: #2e6c80;' align='center'><strong>PlayRight Media Analytics</strong></h2>";
-                        body += "<h3 style='color: #2e6c80;' align='center'>" + request.getParameter("inputFromDate") + "   -   " + request.getParameter("inputToDate") + "</h2>";
-                        body += "<table style=\"border-top: 5px solid white; height: 225px;\" border=\"1\" width=\"783\" cellspacing=\"0\" cellpadding=\"2\" align=\"center\">";
-                        body += "<thead>";
-                        body += "<tr>\n";
-                        body += "<td style=\"background-color:    #993366;\"> </td>\n";
-                        body += "<td style=\"background-color:    #993366;\"> </td>\n";
-                        body += "<td style=\"background-color:    #993366;\"> </td>\n";
-                        body += "<td style=\"background-color:    #993366;\"> </td>\n";
-                        body += "<td style=\"background-color:    #993366;\"> </td>\n";
-                        body += "<td style=\"background-color:    #993366;\"> </td>\n";
-                        body += "<td style=\"background-color:    #993366;\"> </td>\n";
-                        body += "<td style=\"background-color:    #993366;\"> </td>\n";
-                        body += "</tr>";
-                        body += "<tr>";
-                        body += "<td style=\"background-color:  #ffffff;\"><strong>Date</strong></td>";
-                        body += " <td style=\"background-color:  #ffffff;\"><strong>News Paper</strong></td>";
-                        body += "<td style=\"background-color:  #ffffff;\"><strong>Headline</strong></td>";
-                        body += "<td style=\"background-color:  #ffffff;\"><strong>Edition</strong></td>";
-                        body += "<td style=\"background-color:  #ffffff;\"><strong>Source</strong></td>";
-                        body += "<td style=\"background-color:  #ffffff;\"><strong>Language</strong></td>";
-                        body += "<td style=\"background-color:  #ffffff;\"><strong>Image</strong></td>";
-                        body += "<td style=\"background-color:  #ffffff;\"><strong>Page</strong></td>";
-                        body += "</tr>";
-                        body += "<tr>\n";
-                        body += "<td style=\"background-color:    #999999;\"> </td>\n";
-                        body += "<td style=\"background-color:    #999999;\"> </td>\n";
-                        body += "<td style=\"background-color:    #999999;\"> </td>\n";
-                        body += "<td style=\"background-color:    #999999;\"> </td>\n";
-                        body += "<td style=\"background-color:    #999999;\"> </td>\n";
-                        body += "<td style=\"background-color:    #999999;\"> </td>\n";
-                        body += "<td style=\"background-color:    #999999;\"> </td>\n";
-                        body += "<td style=\"background-color:    #999999;\"> </td>\n";
-                        body += "</tr>";
-                        body += "</thead>";
-                        body += "<tbody>";
-                        while (res.next()) {
-                            if( res.getString("news_paper").endsWith(".com")){
-                            body += "<tr>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getTimestamp("news_date") + "</td>";
-                            body += " <td style=\"background-color:  #ffffff;\">" + res.getString("news_paper") + "</td>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getString("headline") + "</td>";
-                            body += "<td style=\"background-color:  #ffffff;\"><a href=" + res.getString("edition") +">" + res.getString("edition") + "</a></td>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getString("source") + "</td>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getString("language") + "</td>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getString("image_exists") + "</td>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getInt("page_no") + "</td>";
-                            body += "</td>";
-                            body += "</tr>";
-                            }else{
-                            body += "<tr>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getTimestamp("news_date") + "</td>";
-                            body += " <td style=\"background-color:  #ffffff;\">" + res.getString("news_paper") + "</td>";
-                            body += "<td style=\"background-color:  #ffffff;\"><a href=\"" + formURL(request) + "/pages/image.jsp?action=getPhoto&imageId=" + res.getInt("id") + "\">" + res.getString("headline") + "</a></td>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getString("edition") + "</td>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getString("source") + "</td>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getString("language") + "</td>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getString("image_exists") + "</td>";
-                            body += "<td style=\"background-color:  #ffffff;\">" + res.getInt("page_no") + "</td>";
-                            body += "</td>";
-                            body += "</tr>"; 
-                            }
-                        }
-                        body += "</tbody>";
-                        body += "</table>";
-                     //   body += "<a href=\"revvster.in\"><img src=\"../images/revvster.png\" width=\"50\" height=\"50\"></a>";
-                       // body += "<p>dfgdfhfgh</p>";
-                       // body += "<p><img src=\"../images/text_logo_white.png\" width=\"50\" height=\"50\"></img></p>";
+
+                        datas = dashboardDao.getDataForEmail(inputFromDate, inputToDate,
+                                inputLanguage, inputEdition, inputSource, inputNewsPaper);
+
+                        body = getHTMLBody(request, datas);
                         try {
+
+                            Company c = new Company();
+                            c.setId(loggedInUser.getCompany());
+                            Setting host = settingDao.getSetting(Settings.EmailHost.toString(), c);
+                            Setting port = settingDao.getSetting(Settings.EmailPort.toString(), c);
+                            Setting usrname = settingDao.getSetting(Settings.EmailUserName.toString(), c);
+                            Setting pwd = settingDao.getSetting(Settings.EmailPassword.toString(), c);
+                            Setting tlsEnable = settingDao.getSetting(Settings.EmailTLSEnable.toString(), c);
+
                             Email email = new Email();
-                            email.setCompany(1);
-                            email.setFrom(from);
+                            email.setCompany(loggedInUser.getCompany() == null ? 0 : loggedInUser.getCompany());
+                            email.setFrom(usrname.getValue());
                             email.setCreatedBy(loggedInUser.getId());
                             email.setTo(to);
                             email.setSubject(subject);
@@ -572,14 +483,11 @@ public class DashboardServlet extends HttpServlet {
                             email.setSource("Send Email");
                             MimeBodyPart messageBodyPart = new MimeBodyPart();
                             messageBodyPart.setContent(body, "text/html");
-                            Company c = new Company();
-                            c.setId(1);
-                            Setting host = settingDao.getSetting(Settings.EmailHost.toString(), c);
-                            Setting port = settingDao.getSetting(Settings.EmailPort.toString(), c);
-                            Setting usrname = settingDao.getSetting(Settings.EmailUserName.toString(), c);
-                            Setting pwd = settingDao.getSetting(Settings.EmailPassword.toString(), c);
-                            Setting tlsEnable = settingDao.getSetting(Settings.EmailTLSEnable.toString(), c);
-
+                            Map<String, String> inlineImages = new HashMap<String, String>();
+                            String img_0_0_1 = request.getServletContext().getRealPath("/images/playright.png");
+                            inlineImages.put("img_0_0_1", img_0_0_1);
+                            String img_0_0_2 = request.getServletContext().getRealPath("/images/revvster.jpg");
+                            inlineImages.put("img_0_0_2", img_0_0_2);
                             id = emailDao.createEmailLog(email);
 
                             if (id > 0) {
@@ -592,7 +500,7 @@ public class DashboardServlet extends HttpServlet {
                                         email.getTo(),
                                         email.getSubject(),
                                         email.getBody(),
-                                        new HashMap<String, String>(),
+                                        inlineImages,
                                         null
                                 );
                                 emailDao.updateEmailLogStatus(id, "Sent");
@@ -632,8 +540,80 @@ public class DashboardServlet extends HttpServlet {
             }
         }
     }
-    
-    private String formURL(HttpServletRequest request){
+
+    private String getHTMLBody(HttpServletRequest request, List<Data> datas) {
+        StringBuilder body = new StringBuilder("<p><img width=\"114\" src=\"cid:img_0_0_1\" alt=\"PlayRight Analytics\" title=\"PlayRight Analytics\"/>\n</p>");
+        body.append("<h2 style='color: #2e6c80;' align='center'><strong>PlayRight Media Analytics</strong></h2>");
+        body.append("<h3 style='color: #2e6c80;' align='center'>" + request.getParameter("inputFromDate") + "   -   " + request.getParameter("inputToDate") + "</h2>");
+        body.append("<table style=\"border-top: 5px solid white; height: 225px;\" border=\"1\" width=\"783\" cellspacing=\"0\" cellpadding=\"2\" align=\"center\">");
+        body.append("<thead>");
+        body.append("<tr>\n");
+        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
+        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
+        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
+        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
+        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
+        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
+        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
+        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
+        body.append("</tr>");
+        body.append("<tr>");
+        body.append("<td style=\"background-color:  #ffffff;\"><strong>Date</strong></td>");
+        body.append(" <td style=\"background-color:  #ffffff;\"><strong>Publication</strong></td>");
+        body.append("<td style=\"background-color:  #ffffff;\"><strong>Headline</strong></td>");
+        body.append("<td style=\"background-color:  #ffffff;\"><strong>Edition</strong></td>");
+        body.append("<td style=\"background-color:  #ffffff;\"><strong>Source</strong></td>");
+        body.append("<td style=\"background-color:  #ffffff;\"><strong>Language</strong></td>");
+        body.append("<td style=\"background-color:  #ffffff;\"><strong>Image</strong></td>");
+        body.append("<td style=\"background-color:  #ffffff;\"><strong>Page</strong></td>");
+        body.append("</tr>");
+        body.append("<tr>\n");
+        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
+        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
+        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
+        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
+        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
+        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
+        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
+        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
+        body.append("</tr>");
+        body.append("</thead>");
+        body.append("<tbody>");
+        for (Data d : datas) {
+
+            body.append("<tr>");
+            body.append("<td style=\"background-color:  #ffffff;\">" + d.getNewsDate() + "</td>");
+            if (d.getNewsPaper().endsWith(".com")) {
+                body.append(" <td style=\"background-color:  #ffffff;\"><a target=\"_blank\" href=\"" + d.getNewsPaper() + "\">" + d.getNewsPaper() + "</a></td>");
+            } else {
+                body.append(" <td style=\"background-color:  #ffffff;\">" + d.getNewsPaper() + "</td>");
+            }
+            if (null == d.getImageFileName() || d.getImageFileName().length() == 0) {
+                body.append("<td style=\"background-color:  #ffffff;\">" + d.getHeadline() + "</td>");
+            } else {
+                body.append("<td style=\"background-color:  #ffffff;\"><a target=\"_blank\" href=\"" + formURL(request) + "/pages/image.jsp?action=getPhoto&imageId=" + d.getId() + "\">" + d.getHeadline() + "</a></td>");
+            }
+            if (d.getEdition().startsWith("http")) {
+                body.append(" <td style=\"background-color:  #ffffff;\"><a target=\"_blank\" href=\"" + d.getEdition() + "\">" + d.getEdition() + "</a></td>");
+            } else {
+                body.append("<td style=\"background-color:  #ffffff;\">" + d.getEdition() + "</td>");
+            }
+            body.append("<td style=\"background-color:  #ffffff;\">" + d.getSource() + "</td>");
+            body.append("<td style=\"background-color:  #ffffff;\">" + d.getLanguage() + "</td>");
+            body.append("<td style=\"background-color:  #ffffff;\">" + d.getImageExists() + "</td>");
+            body.append("<td style=\"background-color:  #ffffff;\">" + d.getPageNo() + "</td>");
+            body.append("</td>");
+            body.append("</tr>");
+        }
+        body.append("</tbody>");
+        body.append("</table>");
+        //   body.append("<a href=\"revvster.in\"><img src=\"../images/revvster.png\" width=\"50\" height=\"50\"></a>");
+        // body.append("<p>dfgdfhfgh</p>");
+        body.append("<p><img width=\"114\" src=\"cid:img_0_0_2\" alt=\"Revvster Technologies Pvt Ltd\" title=\"Revvster\"/></p>");
+        return body.toString();
+    }
+
+    private String formURL(HttpServletRequest request) {
         return request.getScheme().concat("://").concat(request.getServerName()).concat(":").concat(Integer.toString(request.getServerPort())).concat(request.getContextPath());
     }
 
@@ -685,9 +665,10 @@ public class DashboardServlet extends HttpServlet {
         }
         if (b != null && b.length() != 0) {
             data.setImage(b);
+            data.setImageFileName(fileName);
+            data.setFileSize(size);
+            data.setFileType(contentType);
         }
-        data.setFileSize(size);
-        data.setFileType(contentType);
         data.setCreatedBy(loggedInUser.getId());
         data.setLastUpdatedBy(loggedInUser.getId());
         //data.setActive(1);
@@ -740,9 +721,10 @@ public class DashboardServlet extends HttpServlet {
         }
         if (b != null && b.length() != 0) {
             data.setImage(b);
+            data.setImageFileName(fileName);
+            data.setFileSize(size);
+            data.setFileType(contentType);
         }
-        data.setFileSize(Integer.valueOf(request.getParameter("inputFileSize")));
-        data.setFileType(request.getParameter("inputFileType"));
         //data.setCreatedBy(Integer.valueOf(request.getParameter("inputCreatedBy")));
         data.setLastUpdatedBy(loggedInUser.getId());
         //data.setActive(1);

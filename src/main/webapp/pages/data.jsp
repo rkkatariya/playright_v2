@@ -17,6 +17,27 @@
 <!DOCTYPE html>
 <%@page import="com.revvster.playright.model.User"%>
 <%@page import="com.revvster.playright.util.SystemConstants"%>
+<%
+    User user = new User();
+    if (session.getAttribute(SystemConstants.LoggedInUser) != null) {
+        user = (User) session.getAttribute(SystemConstants.LoggedInUser);
+    }
+
+//    RoleEntContext addCtx = null;
+//    RoleEntContext editCtx = null;
+//    RoleEntContext deleteCtx = null;
+//
+//    if (user.getUserEntitlements() != null) {
+//        List<UserEntitlement> ues = user.getUserEntitlements();
+//        addCtx = AuthorizationManager.getRoleEntContext(ues,
+//                new UserEntitlement(Resource.user, Action.add));
+//
+//        editCtx = AuthorizationManager.getRoleEntContext(ues,
+//                new UserEntitlement(Resource.user, Action.update));
+//        deleteCtx = AuthorizationManager.getRoleEntContext(ues,
+//                new UserEntitlement(Resource.user, Action.delete));
+//    }
+%>
 <html lang="en">
     <head>     
         <title>Data</title>
@@ -489,7 +510,9 @@
                                     <button type="button" id="btnCreateData" class="btn btn-primary" data-toggle="modal" data-target="#modalCreateData">Add</button>
                                     <button type="button" id="btnEditData" class="btn btn-primary" data-toggle="modal" data-target="#modalEditData">Edit</button>
                                     <button id="btnDisableData" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDisableData">Delete</button>  
-                                    <button type="button" id="btnSendEmail" class="btn btn-primary" data-toggle="modal" data-target="#modalSendEmail">Email Data</button>
+                                    <%if (null != user.getCompany() && user.getCompany() > 0) {%>
+                                        <button type="button" id="btnSendEmail" class="btn btn-primary" data-toggle="modal" data-target="#modalSendEmail">Email Data</button>
+                                    <%}%>
                                 </div>
                                 <div class="box-body responsive">
 
@@ -594,10 +617,10 @@
                         {
                             "render": function (data, type, columns) {
                                 //                                console.log(columns["manager"]);
-                                if (columns["image"] === 0) {
+                                if (columns["imageFileName"] === 0) {
                                     return '';
                                 } else {
-                                    return '<a href="image.jsp?id=' + columns["id"] + '" target="_blank" >img</a>';
+                                    return '<a href="image.jsp?imageId=' + columns["id"] + '" target="_blank" >img</a>';
                                 }
                             }, "targets": [16], "visible": true
                         }
@@ -806,7 +829,6 @@
                                 }
                             })
                             .fail(function (jqXHR, textStatus, errorThrown) {
-                                alert(data);
                                 var respJson = JSON.parse(jqXHR.responseText);
                                 var response = jQuery.parseJSON(respJson);
                                 $.alert(response.errorMsg, "Error !!");

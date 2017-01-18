@@ -11,8 +11,6 @@ import com.revvster.playright.ui.charts.LineChartData;
 import com.revvster.playright.ui.charts.BarChartData;
 import com.revvster.playright.ui.charts.ChartsUtil;
 import com.revvster.playright.ui.charts.PieChartData;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -92,5 +90,10 @@ public interface DashboardDao {
     public Data getPhoto(Integer imageId) throws SQLException;
     
     public Data getData(Integer id) throws SQLException;
+    
+    public List<Data> getDataForEmail(String inputFrom,
+            String inputTo, String inputLanguage, String inputEdition,
+            String inputSource, String inputNewsPaper)
+            throws SQLException;
 
 }

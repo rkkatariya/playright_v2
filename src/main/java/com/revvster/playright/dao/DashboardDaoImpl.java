@@ -5,7 +5,6 @@
  */
 package com.revvster.playright.dao;
 
-import static com.revvster.playright.dao.DaoHelper.updateAuditableLast;
 import com.revvster.playright.model.Data;
 import com.revvster.playright.model.User;
 import com.revvster.playright.ui.charts.LineChartData;
@@ -13,16 +12,10 @@ import com.revvster.playright.ui.charts.ChartsUtil;
 import com.revvster.playright.ui.charts.LineDataSet;
 import com.revvster.playright.ui.charts.BarChartData;
 import com.revvster.playright.ui.charts.PieChartData;
-import com.revvster.playright.util.AuthenticationManager;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.security.NoSuchAlgorithmException;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -488,7 +481,7 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
     public BarChartData getLanguageVsArticles(Timestamp inptFrom, Timestamp inptTo) throws SQLException {
         logger.debug("getLanguageVsArticles::START");
         BarChartData chartData = new BarChartData();
-        PreparedStatement ps;    
+        PreparedStatement ps;
         ps = conn.prepareStatement(ChartsUtil.buildQueryForCustomAxis(null,
                 "", "count(*)", "select ad.last_updated_on,ad.language from analytics_data ad\n"
                 + "where ad.last_updated_on between '" + inptFrom + "' and '" + inptTo + "'", "`language`"));
@@ -499,12 +492,12 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         logger.debug("getLanguageVsArticles::END");
         return chartData;
     }
-    
+
     @Override
     public PieChartData getEditionVsArticles(Timestamp inptFrom, Timestamp inptTo) throws SQLException {
         logger.debug("getEditionVsArticles::START");
         PieChartData chartData = new PieChartData();
-        PreparedStatement ps;    
+        PreparedStatement ps;
         ps = conn.prepareStatement(ChartsUtil.buildQueryForCustomAxis(null,
                 "", "count(*)", "SELECT ad.last_updated_on,ad.edition FROM analytics_data ad\n"
                 + "where ad.last_updated_on between '" + inptFrom + "' and '" + inptTo + "'", "`edition`"));
@@ -515,12 +508,12 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         logger.debug("getEditionVsArticles::END");
         return chartData;
     }
-    
+
     @Override
     public PieChartData getJournalistDistribution(Timestamp inptFrom, Timestamp inptTo) throws SQLException {
         logger.debug("getJournalistDistribution::START");
         PieChartData chartData = new PieChartData();
-        PreparedStatement ps;    
+        PreparedStatement ps;
         ps = conn.prepareStatement(ChartsUtil.buildQueryForCustomAxis(null,
                 "", "count(*)", "SELECT ad.last_updated_on,ad.journalist_factor FROM analytics_data ad\n"
                 + "where ad.last_updated_on between '" + inptFrom + "' and '" + inptTo + "'", "`journalist_factor`"));
@@ -531,12 +524,12 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         logger.debug("getJournalistDistribution::END");
         return chartData;
     }
-    
+
     @Override
     public BarChartData getTopEnglishPrintDistribution(Timestamp inptFrom, Timestamp inptTo) throws SQLException {
         logger.debug("getTopEnglishPrintDistribution::START");
         BarChartData chartData = new BarChartData();
-        PreparedStatement ps;    
+        PreparedStatement ps;
         ps = conn.prepareStatement(ChartsUtil.buildQueryForCustomAxis(null,
                 "", "count(*)", "SELECT ad.last_updated_on,ad.news_paper FROM analytics_data ad where ad.language = 'english'\n"
                 + "and ad.last_updated_on between '" + inptFrom + "' and '" + inptTo + "'", "`news_paper`"));
@@ -547,12 +540,12 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         logger.debug("getTopEnglishPrintDistribution::END");
         return chartData;
     }
-    
+
     @Override
     public BarChartData getTopVernacularPrintDistribution(Timestamp inptFrom, Timestamp inptTo) throws SQLException {
         logger.debug("getTopVernacularPrintDistribution::START");
         BarChartData chartData = new BarChartData();
-        PreparedStatement ps;    
+        PreparedStatement ps;
         ps = conn.prepareStatement(ChartsUtil.buildQueryForCustomAxis(null,
                 "", "count(*)", "SELECT ad.last_updated_on,ad.news_paper FROM analytics_data ad where ad.language <> 'english'\n"
                 + "and ad.last_updated_on between '" + inptFrom + "' and '" + inptTo + "'", "`news_paper`"));
@@ -568,7 +561,7 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
     public BarChartData getLanguageVsArticles(ChartsUtil.DateRanges dateRange) throws SQLException {
         logger.debug("getLanguageVsArticles::START");
         BarChartData chartData = new BarChartData();
-        PreparedStatement ps;      
+        PreparedStatement ps;
         ps = conn.prepareStatement(ChartsUtil.buildQueryForCustomAxis(dateRange,
                 "last_updated_on", "count(*)", "select ad.last_updated_on,ad.language from analytics_data ad", "`language`"));
         ResultSet rs = ps.executeQuery();
@@ -688,7 +681,7 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         logger.debug("getDataByContext::START::");
         List<Data> datas = new ArrayList<>();
         PreparedStatement ps;
-        ps = conn.prepareStatement("select * from analytics_data");
+        ps = conn.prepareStatement("select * from analytics_data order by news_date desc");
         // ps.setInt(1, customer);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -831,6 +824,61 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         close(ps);
         logger.debug("getPhoto::END");
         return d;
+    }
+
+    @Override
+    public List<Data> getDataForEmail(String inputFrom,
+            String inputTo, String inputLanguage, String inputEdition,
+            String inputSource, String inputNewsPaper)
+            throws SQLException {
+        logger.debug("getDataForEmail::START::");
+        List<Data> datas = new ArrayList<>();
+        PreparedStatement ps;
+        // ps.setInt(1, customer);
+        String selectDate = "select ad.* from analytics_data ad \n"
+                + "where ad.news_date between '" + inputFrom + "' and '" + inputTo + "' \n";
+        String language = !"".equals(inputLanguage)
+                ? "and ad.language = '" + inputLanguage + "'\n" : "and lower(ad.language) = 'english'\n";
+        String edition = !"".equals(inputEdition)
+                ? "and ad.edition = '" + inputEdition + "'\n" : "";
+        String source = !"".equals(inputSource)
+                ? "and ad.source = '" + inputSource + "' \n" : "";
+        String newsPaper = !"".equals(inputNewsPaper)
+                ? "and ad.news_paper = '" + inputNewsPaper + "'\n" : "";
+        String order = "order by date(ad.news_date) desc";
+        
+        String query = (selectDate + language + edition
+                + source + newsPaper + order);
+
+        ps = conn.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Data d = getDataObj(rs);
+            datas.add(d);
+        }
+        close(rs);
+        close(ps);
+
+        if ("".equals(inputLanguage)) {
+            language = "and lower(ad.language) != 'english' \n";
+
+            query = (selectDate + language + edition
+                    + source + newsPaper + order);
+
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Data d = getDataObj(rs);
+                datas.add(d);
+            }
+
+            close(rs);
+            close(ps);
+
+        }
+
+        logger.debug("getDataForEmail::END");
+        return datas;
     }
 
 }

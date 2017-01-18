@@ -5,11 +5,7 @@
  */
 package com.revvster.playright.dao;
 
-import com.revvster.playright.model.Company;
-import com.revvster.playright.model.ContextObj;
 import com.revvster.playright.model.Email;
-import com.revvster.playright.model.Location;
-import com.revvster.playright.model.Project;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +19,6 @@ import org.apache.logging.log4j.Logger;
 public class EmailDaoImpl extends DaoHelper implements EmailDao {
 
     private static final Logger logger = LogManager.getLogger(EmailDaoImpl.class.getName());
-
-    private static final String getEmailTemplateQuery = "SELECT et.* \n"
-            + "FROM sb_email_template et \n";
 
     public EmailDaoImpl() {
         super();
