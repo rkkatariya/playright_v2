@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" name="LoggingConfig">
+    <Properties>
+        <Property name="log-path" >${sys:catalina.home}/logs</Property>
+    </Properties>
+
+    <Appenders>
+        <RollingFile name="file-log" fileName="${log-path}/playright.log"
+             filePattern="${log-path}/playright-%d{yyyy-MM-dd}.log" immediateFlush="true">
+            <PatternLayout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%t] %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%t] %c{1} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.revvster.playright.util" level="DEBUG" additivity="false">
+            <appender-ref ref="console" level="INFO"/>
+        </Logger>
+        <Root level="INFO">
+            <appender-ref ref="file-log"/>
+        </Root>
+    </Loggers>
+</Configuration>

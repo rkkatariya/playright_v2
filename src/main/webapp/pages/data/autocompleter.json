@@ -1,0 +1,22 @@
+{
+    "data": [
+        {
+            "id": "1",
+            "name": "RK",
+            "mobile": "231",
+            "emailAddress": "weqw@asd.com",
+            "gender": "Male",
+            "age": "12",
+            "zip": "12sas"
+        },
+        {
+            "id": "2",
+            "name": "PN",
+            "mobile": "234",
+            "emailAddress": "asdas@as.com",
+            "gender": "Female",
+            "age": "12",
+            "zip": "aasd"
+        }
+    ]
+}

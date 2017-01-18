@@ -1,0 +1,21 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 26, 2016, 11:02:09 AM
+    Author     : REVV-03
+*/
+@media print {
+    body {
+        width: 210mm;
+        height: 279mm;
+        margin-top: 0mm;
+        margin-bottom: 0mm;
+    }
+    button {
+        display: none;
+    }
+}
+
