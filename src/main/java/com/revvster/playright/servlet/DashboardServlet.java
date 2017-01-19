@@ -445,7 +445,7 @@ public class DashboardServlet extends HttpServlet {
                         break;
                     case "sendEmail":
                         to = request.getParameter("inputEmailAddress");
-                        from = "revvster@gmail.com";
+                        from = "playrightreports@gmail.com";
                         subject = request.getParameter("inputSubject");
                         String body = null;
                         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");

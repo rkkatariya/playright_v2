@@ -236,7 +236,7 @@
                                     <div class="form-group">
                                         <label for="inputNewsPaper">News Paper</label>
                                         <input type="text" class="form-control" id="inputNewsPaper" name="inputNewsPaper" placeholder="News Paper">
-                                    </div>
+                                    </div>                                    
                                     <div class="form-group">
                                         <label for="inputLanguage">Language</label>
                                         <select id="inputLanguage" name="inputLanguage" class="form-control" style="width: 100%;" >
@@ -332,7 +332,7 @@
                                         <input type="file" name="inputImage" id="inputImage" accept="image/*">
                                         <!--<p class="help-block"></p>-->
                                     </div>
-                                </div>
+                                    </div>
 
                             </div>
 
@@ -481,9 +481,7 @@
                 <section class="content">                
 
                     <div class="row">
-                        <div class="col-sm-12">
-                            <!--                            <div class="box box-primary">
-                                                            <div class="box-body">-->
+                        <div class="col-sm-12">                            
                             <div class="box box-primary ">
                                 <div class="box-header with-border">
                                     <button type="button" id="btnCreateData" class="btn btn-primary" data-toggle="modal" data-target="#modalCreateData">Add</button>
@@ -491,8 +489,7 @@
                                     <button id="btnDisableData" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDisableData">Delete</button>  
                                     <button type="button" id="btnSendEmail" class="btn btn-primary" data-toggle="modal" data-target="#modalSendEmail">Email Data</button>
                                 </div>
-                                <div class="box-body responsive">
-
+                                <div class="box-body table-responsive">
                                     <table id="list_data" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>                                               
@@ -515,6 +512,28 @@
                                                 <th>Image</th>
                                             </tr>
                                         </thead>
+                                        <tbody></tbody>                                            
+                                        <tfoot>
+                                            <tr>                                               
+                                                <th>News Date</th>
+                                                <th>News Paper</th>
+                                                <th>Language</th>
+                                                <th>Headline</th>
+                                                <th>Edition</th>
+                                                <th>Supplement</th>
+                                                <th>Source</th>   
+                                                <th>Image Exists</th>
+                                                <th>Page No</th>
+                                                <th>Height</th>
+                                                <th>Width</th>
+                                                <th>Total Article Size</th>
+                                                <th>Circulation Figure</th>
+                                                <th>Quantitative AVE</th>
+                                                <th>Journalist Factor</th>  
+                                                <th>Last updated</th>  
+                                                <th>Image</th>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
@@ -550,6 +569,7 @@
             var tableData;
             var inputFromDate = $("#inputFromDate");
             var inputToDate = $("#inputToDate");
+            var inputNewsDate = $("#inputNewsDate");
             var sendEmail = $('form#sendEmail');
             $(function () {
                 table = $('#list_data').DataTable({
@@ -592,6 +612,18 @@
                     ],
                     "columnDefs": [
                         {
+                            type: "date-uk",
+                            "render": function (data, type, columns) {
+                                if (data === null || data === '' || typeof data === "undefined") {
+                                    return '';
+                                } else {
+                                    return convertDate(data);
+
+                                }
+                            },
+                            "targets": [0]
+                        },
+                        {
                             "render": function (data, type, columns) {
                                 //                                console.log(columns["manager"]);
                                 if (columns["image"] === 0) {
@@ -626,6 +658,20 @@
                 toggleEditDataBtn();
                 toggleDisableDataBtn();
 
+                $('#list_data tfoot th').each(function () {
+                    var title = $('#list_data thead th').eq($(this).index()).text();
+                    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+                });
+                table.columns().every(function () {
+                    var that = this;
+
+                    $('input', this.footer()).on('keyup change', function () {
+                        if (that.search() !== this.value) {
+                            that.search(this.value).draw();
+                        }
+                    });
+                });
+
                 $("#resetCreateData").click(function () {
                     // createUserForm.validate().resetForm();
                     $('form#createData .form-group').removeClass('has-error has-feedback has-success');
@@ -639,14 +685,16 @@
 
                 $("form#createData #inputNewsDate").datepicker({
                     format: "dd-mm-yyyy",
-                    startDate: "0d",
+                    startDate: "-6m",
+                    endDate: "0d",
                     todayHighlight: true,
                     autoclose: true
                 });
 
                 $("form#editData #inputNewsDate").datepicker({
                     format: "dd-mm-yyyy",
-                    startDate: "0d",
+                    startDate: "-6m",
+                    endDate: "0d",
                     todayHighlight: true,
                     autoclose: true
                 });
@@ -692,7 +740,8 @@
                     $("form#editData :input[id=inputEdition]").val(data["edition"]);
                     $("form#editData :input[id=inputSupplement]").val(data["supplement"]);
                     $("form#editData :input[id=inputSource]").val(data["source"]);
-                    $("form#editData :input[id=inputImageExists]").val(data["imageExists"]);
+                   // $("form#editData :input[id=inputImageExists]").val(data["imageExists"]);
+                    $('form#editData :input:radio[name=inputImageExists]').filter('[value=' + data["imageExists"] + ']').prop('checked', true);
                     $("form#editData :input[id=inputPageNo]").val(data["pageNo"]);
                     $("form#editData :input[id=inputHeight]").val(data["height"]);
                     $("form#editData :input[id=inputWidth]").val(data["width"]);
