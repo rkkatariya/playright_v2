@@ -356,7 +356,7 @@
                 function loadTopEnglishPrintDistribution() {
 
                     $.ajax({
-                        url: "../dashboard?action=getTopEnglishPrintDistribution",
+                        url: "../chart?action=getTopEnglishPrintDistribution",
                         data: {
                             selectedDateRange: selectDateRange.val(),
                             inputFromDate: "",
@@ -386,7 +386,7 @@
                 }
                 function loadTopVernacularPrintDistribution() {
                     $.ajax({
-                        url: "../dashboard?action=getTopVernacularPrintDistribution",
+                        url: "../chart?action=getTopVernacularPrintDistribution",
                         data: {
                             selectedDateRange: selectDateRange.val(),
                             inputFromDate: "",
@@ -416,7 +416,7 @@
                 }
                 function loadEditionAnalytics() {
                     $.ajax({
-                        url: "../dashboard?action=getEditionAnalytics",
+                        url: "../chart?action=getEditionAnalytics",
                         data: {
                             selectedDateRange: selectDateRange.val(),
                             inputFromDate: "",
@@ -446,7 +446,7 @@
                 }
                 function loadJournalistDistribution() {
                     $.ajax({
-                        url: "../dashboard?action=getJournalistDistribution",
+                        url: "../chart?action=getJournalistDistribution",
                         data: {
                             selectedDateRange: selectDateRange.val(),
                             inputFromDate: "",
@@ -479,7 +479,7 @@
 
                 function loadLanguageAnalytics() {
                     $.ajax({
-                        url: "../dashboard?action=getLanguageAnalytics",
+                        url: "../chart?action=getLanguageAnalytics",
                         data: {
                             selectedDateRange: selectDateRange.val(),
                             inputFromDate: "",

@@ -34,6 +34,7 @@ public class Data {
     private String imageExists;      
     private String fileType;
     private Integer fileSize;
+    private String imageFileName;
     private Timestamp lastUpdatedOn;
     private Integer active;
     private Integer createdBy;
@@ -52,6 +53,14 @@ public class Data {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getImageFileName() {
+        return imageFileName;
+    }
+
+    public void setImageFileName(String imageFileName) {
+        this.imageFileName = imageFileName;
     }
 
     /**

@@ -76,7 +76,7 @@
                 <!-- Main content -->
                 <section class="content">
                     <div class="row">                       
-                        <h2 class="box-title" align='center'>Playright Media Analysis</h3> 
+                        <h2 class="box-title" align='center'>PlayRight Media Analysis</h3> 
                             <div id="getData">
                             </div>
 
@@ -111,11 +111,11 @@
         <script src="../adminlte2/plugins/select2/select2.full.min.js"></script>
         <script src="../adminlte2/plugins/datepicker/js/bootstrap-datepicker.min.js"></script>            
         <jsp:include page="adminlte_js.jsp"/>
-<!--        <script type="text/javascript">
-            var id = 
+        <script type="text/javascript">
+            var id = <%=request.getParameter("imageId")%>;
             $(function () {
                 $.ajax({
-                    url: "../dashboard?action=getData",
+                    url: "../image?action=getData",
                     data: 'id=' + id,
                     type: "POST",
                     dataType: "json"
@@ -133,11 +133,11 @@
 
                 function getData(data) {
                     return '<h4 class="box-title" align="center">' +
-                            data.newsDate +
-                            ',' +
+                            convertDate(data.newsDate) +
+                            ', ' +
                             data.newsPaper +
-                            ',' +
-                            'Page No.' +
+                            ', ' +
+                            'Page No. ' +
                             data.pageNo +
                             '</h4>' +
                             '<h3 class="box-title" align="center">' +
@@ -149,7 +149,7 @@
 
             });
 
-        </script> -->
+        </script> 
 
     </body>
 </html>

@@ -95,7 +95,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="titleUser">Send Email To</h4>
+                        <h4 class="modal-title" id="titleUser">Send Email</h4>
                     </div>
                     <div class="modal-body">
                         <form role="form" id="sendEmail">    
@@ -108,11 +108,11 @@
                                 <label for="inputSubject">Email Subject</label>
                                 <input type="text" class="form-control" id="inputSubject" name="inputSubject" placeholder="Subject">
                             </div>  
-                            <!--                            <div class="form-group">
-                                                            <label for="inputContent">Email Content</label>                                
-                                                                                            <input type="textarea" class="form-control" id="inputContent" name="inputContent" placeholder="Content">
-                                                            <textarea class="form-control" rows="3" id="inputContent" name="inputContent" placeholder="Content"></textarea>
-                                                        </div>-->
+                            <div class="form-group">
+                                <label for="inputContent">Email Content</label>                              
+
+                                <textarea class="form-control" rows="3" id="inputContent" name="inputContent" placeholder="Content"></textarea>
+                            </div>
 
                             <div>
                                 <button type="button" class="btn btn-primary" id="btnSubmitSendEmail">Submit</button>
@@ -123,7 +123,7 @@
 
                     <div class="modal-footer">                   
 
-                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -563,10 +563,6 @@
                 }
                 reloadAllElements();
 
-                $('button#btnSendEmail').click(function () {
-                    var body = "<p>Click <a href=\"emailAnalytics.jsp\"> here </a>to view the charts.</p>";
-                    $("form#sendEmail :input[id=emailBody]").val(body);
-                });
                 $("#btnSubmitSendEmail").on("click", function () {
                     $.ajax({
                         type: "POST",

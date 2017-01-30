@@ -400,82 +400,105 @@
                 </div>
             </div>            
         </div>
-        <div class="modal fade bs-example-modal-sm" id="modalSendEmail" role="dialog" aria-labelledby="sendEmail">
-            <div class="modal-dialog modal-sm" role="document">
+        <div class="modal fade" id="modalSendEmail" role="dialog" aria-labelledby="sendEmail">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="titleUser">Send Email To</h4>
+                        <h4 class="modal-title" id="titleUser">Send Email</h4>
                     </div>
                     <div class="modal-body">
-                        <form role="form" id="sendEmail">    
-                            <input type="hidden" id="emailBody" name="emailBody"  class="form-control">
-                            <div class="form-group">
-                                <label>Select dates</label>
-                                <div class="input-group input-daterange">                                    
-                                    <input type="text" class="form-control" id="inputFromDate" name="inputFromDate" data-provide="datepicker">
-                                    <span class="input-group-addon">to</span>
-                                    <input type="text" class="form-control" id="inputToDate" name="inputToDate" data-provide="datepicker">
+                        <form role="form" id="sendEmail" class="form-horizontal"> 
+                            <div class="box-body">                                
+                                <div class="col-sm-5">
+                                    <input type="hidden" id="emailBody" name="emailBody"  class="form-control">
+                                    <div class="form-group">
+                                        <label><h4>Filters</h4></label>
+                                    </div>                                
+                                    <div class="form-group">
+                                        <label>Select dates</label>
+                                        <div class="input-group input-daterange">                                    
+                                            <input type="text" class="form-control" id="inputFromDate" name="inputFromDate" data-provide="datepicker">
+                                            <span class="input-group-addon">to</span>
+                                            <input type="text" class="form-control" id="inputToDate" name="inputToDate" data-provide="datepicker">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputLanguage">Language</label>
+                                        <select id="inputLanguage" name="inputLanguage" class="form-control" style="width: 100%;" >
+                                            <option value="">Select Language</option>
+                                            <option value="English">English</option>
+                                            <option value="Kannada">Kannada</option>
+                                            <option value="Telugu">Telugu</option>
+                                            <option value="Urdu">Urdu</option>
+                                            <option value="Malayalam">Malayalam</option>
+                                            <option value="Marathi">Marathi</option>
+                                            <option value="Hindi">Hindi</option>
+                                            <option value="Tamil">Tamil</option>
+                                            <option value="Bengali">Bengali</option>                                           
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputEdition">Edition</label>
+                                        <select id="inputEdition" name="inputEdition" class="form-control" style="width: 100%;" >
+                                            <option value="">Select Edition</option>
+                                            <option value="Mumbai">Mumbai</option>
+                                            <option value="Bangalore">Bangalore</option>
+                                            <option value="New Delh">New Delhi</option>
+                                            <!--                                            <option value="urdu">Urdu</option>
+                                                                                        <option value="malayalam">Malayalam</option>
+                                                                                        <option value="marathi">Marathi</option>
+                                                                                        <option value="hindi">Hindi</option>
+                                                                                        <option value="tamil">Tamil</option>
+                                                                                        <option value="bengali">Bengali</option>
+                                                                                        <option value="others">Others</option>-->
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputSource">Source</label>
+                                        <input type="text" class="form-control" id="inputSource" name="inputSource" placeholder="Source">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputNewsPaper">News Paper</label>
+                                        <input type="text" class="form-control" id="inputNewsPaper" name="inputNewsPaper" placeholder="News Paper">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputLanguage">Language</label>
-                                <select id="inputLanguage" name="inputLanguage" class="form-control" style="width: 100%;" >
-                                    <option value="">Select Language</option>
-                                    <option value="English">English</option>
-                                    <option value="Kannada">Kannada</option>
-                                    <option value="Telugu">Telugu</option>
-                                    <option value="Urdu">Urdu</option>
-                                    <option value="Malayalam">Malayalam</option>
-                                    <option value="Marathi">Marathi</option>
-                                    <option value="Hindi">Hindi</option>
-                                    <option value="Tamil">Tamil</option>
-                                    <option value="Bengali">Bengali</option>                                           
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputEdition">Edition</label>
-                                <select id="inputEdition" name="inputEdition" class="form-control" style="width: 100%;" >
-                                    <option value="">Select Edition</option>
-                                    <option value="Mumbai">Mumbai</option>
-                                    <option value="Bangalore">Bangalore</option>
-                                    <option value="New Delh">New Delhi</option>
-                                    <!--                                            <option value="urdu">Urdu</option>
-                                                                                <option value="malayalam">Malayalam</option>
-                                                                                <option value="marathi">Marathi</option>
-                                                                                <option value="hindi">Hindi</option>
-                                                                                <option value="tamil">Tamil</option>
-                                                                                <option value="bengali">Bengali</option>
-                                                                                <option value="others">Others</option>-->
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputSource">Source</label>
-                                <input type="text" class="form-control" id="inputSource" name="inputSource" placeholder="Source">
-                            </div>
-                            <div class="form-group">
-                                <label for="inputNewsPaper">News Paper</label>
-                                <input type="text" class="form-control" id="inputNewsPaper" name="inputNewsPaper" placeholder="News Paper">
-                            </div>
-                            <div class="form-group">
-                                <label for="inputEmailAddress">Recipient Email Address</label>
-                                <input type="text" class="form-control" id="inputEmailAddress" name="inputEmailAddress" placeholder="Email">
-                            </div>
-                            <div class="form-group">
-                                <label for="inputSubject">Subject</label>
-                                <input type="text" class="form-control" id="inputSubject" name="inputSubject" placeholder="Subject">
-                            </div>                                                    
+                                <div class="col-sm-2">                                    
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label><h4>Email</h4></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputEmailAddress">Recipient Email Address</label>
+                                        <input type="text" class="form-control" id="inputEmailAddress" name="inputEmailAddress" placeholder="Email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputSubject">Subject</label>
+                                        <input type="text" class="form-control" id="inputSubject" name="inputSubject" placeholder="Subject">
+                                    </div>                                                    
+                                </div>
+                                <!--                                <div>
+                                                                    <button type="submit" class="btn btn-primary" id="btnSubmitSendEmail">Submit</button>
+                                                                </div>-->
 
-                            <div>
-                                <button type="submit" class="btn btn-primary" id="btnSubmitSendEmail">Submit</button>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">                            
+                                </div>
+                                <div class="col-sm-3"> 
+                                    <button type="submit" class="btn btn-primary pull-right" id="btnSubmitSendEmail">Submit</button>
+                                </div>
+
+                                <div class="col-sm-3">                            
+                                </div>
                             </div>
                         </form>
                     </div>
 
 
-                    <div class="modal-footer">                   
-
-                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <div class="modal-footer">                  
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -509,7 +532,7 @@
                                     <button type="button" id="btnEditData" class="btn btn-primary" data-toggle="modal" data-target="#modalEditData">Edit</button>
                                     <button id="btnDisableData" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDisableData">Delete</button>  
                                     <%if (null != user.getCompany() && user.getCompany() > 0) {%>
-                                        <button type="button" id="btnSendEmail" class="btn btn-primary" data-toggle="modal" data-target="#modalSendEmail">Email Data</button>
+                                    <button type="button" id="btnSendEmail" class="btn btn-primary" data-toggle="modal" data-target="#modalSendEmail">Email Data</button>
                                     <%}%>
                                 </div>
                                 <div class="box-body table-responsive">
@@ -708,7 +731,6 @@
 
                 $("form#createData #inputNewsDate").datepicker({
                     format: "dd-mm-yyyy",
-                    startDate: "-6m",
                     endDate: "0d",
                     todayHighlight: true,
                     autoclose: true
@@ -716,7 +738,6 @@
 
                 $("form#editData #inputNewsDate").datepicker({
                     format: "dd-mm-yyyy",
-                    startDate: "-6m",
                     endDate: "0d",
                     todayHighlight: true,
                     autoclose: true
@@ -763,7 +784,7 @@
                     $("form#editData :input[id=inputEdition]").val(data["edition"]);
                     $("form#editData :input[id=inputSupplement]").val(data["supplement"]);
                     $("form#editData :input[id=inputSource]").val(data["source"]);
-                   // $("form#editData :input[id=inputImageExists]").val(data["imageExists"]);
+                    // $("form#editData :input[id=inputImageExists]").val(data["imageExists"]);
                     $('form#editData :input:radio[name=inputImageExists]').filter('[value=' + data["imageExists"] + ']').prop('checked', true);
                     $("form#editData :input[id=inputPageNo]").val(data["pageNo"]);
                     $("form#editData :input[id=inputHeight]").val(data["height"]);

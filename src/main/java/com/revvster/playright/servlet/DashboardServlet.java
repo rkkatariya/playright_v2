@@ -430,8 +430,10 @@ public class DashboardServlet extends HttpServlet {
                         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
                         Date fromDate = dateFormatter.parse(request.getParameter("inputFromDate"));
                         Date toDate = dateFormatter.parse(request.getParameter("inputToDate"));
-                        inputFromDate = fromDate.toString();
-                        inputToDate = toDate.toString();
+                        inptFrom = new Timestamp(fromDate.getTime());
+                        inptTo = new Timestamp(toDate.getTime());
+                        String fromD = inptFrom.toString();
+                        String toD = inptTo.toString();
                         // String[] inputEdition = {};
                         String inputEdition = "";
                         // String[] inputLanguage = {};
@@ -453,7 +455,7 @@ public class DashboardServlet extends HttpServlet {
                             inputNewsPaper = request.getParameter("inputNewsPaper");
                         }
 
-                        datas = dashboardDao.getDataForEmail(inputFromDate, inputToDate,
+                        datas = dashboardDao.getDataForEmail(fromD, toD,
                                 inputLanguage, inputEdition, inputSource, inputNewsPaper);
 
                         body = getHTMLBody(request, datas);
@@ -466,7 +468,6 @@ public class DashboardServlet extends HttpServlet {
                             Setting usrname = settingDao.getSetting(Settings.EmailUserName.toString(), c);
                             Setting pwd = settingDao.getSetting(Settings.EmailPassword.toString(), c);
                             Setting tlsEnable = settingDao.getSetting(Settings.EmailTLSEnable.toString(), c);
-
                             Email email = new Email();
                             email.setCompany(loggedInUser.getCompany() == null ? 0 : loggedInUser.getCompany());
                             email.setFrom(usrname.getValue());
@@ -516,12 +517,6 @@ public class DashboardServlet extends HttpServlet {
                             jsonArray = gson.toJson(getErrorJson("There was an error sending email !!"));
                         }
                         break;
-                    case "getData":
-                        id = Integer.valueOf(request.getParameter("id"));
-                        data = dashboardDao.getData(id);
-                        jsonArray = gson.toJson(data);
-                        break;
-
                 }
             } catch (SQLException | NumberFormatException ex) {
                 logger.error(ex);
@@ -538,75 +533,188 @@ public class DashboardServlet extends HttpServlet {
     }
 
     private String getHTMLBody(HttpServletRequest request, List<Data> datas) {
-        StringBuilder body = new StringBuilder("<p><img width=\"114\" src=\"cid:img_0_0_1\" alt=\"PlayRight Analytics\" title=\"PlayRight Analytics\"/>\n</p>");
-        body.append("<h2 style='color: #2e6c80;' align='center'><strong>PlayRight Media Analytics</strong></h2>");
-        body.append("<h3 style='color: #2e6c80;' align='center'>" + request.getParameter("inputFromDate") + "   -   " + request.getParameter("inputToDate") + "</h2>");
-        body.append("<table style=\"border-top: 5px solid white; height: 225px;\" border=\"1\" width=\"783\" cellspacing=\"0\" cellpadding=\"2\" align=\"center\">");
-        body.append("<thead>");
-        body.append("<tr>\n");
-        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
-        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
-        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
-        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
-        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
-        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
-        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
-        body.append("<td style=\"background-color:    #993366;\"> </td>\n");
-        body.append("</tr>");
-        body.append("<tr>");
-        body.append("<td style=\"background-color:  #ffffff;\"><strong>Date</strong></td>");
-        body.append(" <td style=\"background-color:  #ffffff;\"><strong>Publication</strong></td>");
-        body.append("<td style=\"background-color:  #ffffff;\"><strong>Headline</strong></td>");
-        body.append("<td style=\"background-color:  #ffffff;\"><strong>Edition</strong></td>");
-        body.append("<td style=\"background-color:  #ffffff;\"><strong>Source</strong></td>");
-        body.append("<td style=\"background-color:  #ffffff;\"><strong>Language</strong></td>");
-        body.append("<td style=\"background-color:  #ffffff;\"><strong>Image</strong></td>");
-        body.append("<td style=\"background-color:  #ffffff;\"><strong>Page</strong></td>");
-        body.append("</tr>");
-        body.append("<tr>\n");
-        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
-        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
-        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
-        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
-        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
-        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
-        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
-        body.append("<td style=\"background-color:    #999999;\"> </td>\n");
-        body.append("</tr>");
-        body.append("</thead>");
-        body.append("<tbody>");
+        StringBuilder sb = new StringBuilder("    <head>  \n");
+        sb.append("        <title></title>  \n");
+        sb.append("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>  \n");
+        sb.append("    </head>\n");
+        sb.append("    <body text=\"#000000\" link=\"#000000\" alink=\"#000000\" vlink=\"#000000\" style=\"width:11in;\">\n");
+        sb.append("        <table width=\"100%\">\n");
+        sb.append("            <tr>\n");
+        sb.append("                <td width=\"5%\"></td>\n");
+        sb.append("                <td align=\"center\" width=\"90%\">\n");
+        sb.append("                    <table style=\"empty-cells: show; width: 100%; border-collapse: collapse; background-color: white;\">\n");
+        sb.append("                        <tr style=\"height:20px\">\n");
+        sb.append("                            <td style=\"width:10%\"></td>\n");
+        sb.append("                            <td style=\"width:45%\"></td>\n");
+        sb.append("                            <td style=\"width:15%\"></td>\n");
+        sb.append("                            <td style=\"width:10%\"></td>\n");
+        sb.append("                            <td style=\"width:10%\"></td>\n");
+        sb.append("                            <td style=\"width:5%\"></td>\n");
+        sb.append("                            <td style=\"width:5%\"></td>\n");
+        sb.append("                        </tr>\n");
+        sb.append("                        <tr style=\"height:20px\">\n");
+        sb.append("                            <td colspan=\"7\"></td>\n");
+        sb.append("                        </tr>\n");
+        sb.append("                        <tr>\n");
+        sb.append("                            <td colspan=\"7\">\n");
+        sb.append("                                <div style=\"float: left; width: 15%; margin: 0 auto; padding: 20px 0 0 0\">\n");
+        sb.append("                                    <img width=\"114\" src=\"cid:img_0_0_1\" alt=\"PlayRight Analytics\" title=\"PlayRight Analytics\"/>\n");
+        sb.append("                                </div>\n");
+        sb.append("                                <div style=\"float: left; margin: 0 auto; width: 70%;\">\n");
+        sb.append("                                    <table id=\"title_tbl\" style=\"width: 100%; border-collapse: collapse; background-color: white;\">\n");
+        sb.append("                                        <tr>\n");
+        sb.append("                                            <td style=\"width:100%; text-align: center; padding: 5px\">\n");
+        sb.append("                                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif; color: #000000; font-size: 22px; line-height: 1; *line-height: normal; white-space: nowrap; font-weight: bold;\">PlayRight Media Analysis</span>\n");
+        sb.append("                                            </td>\n");
+        sb.append("                                        </tr>\n");
+        sb.append("                                        <tr>\n");
+        sb.append("                                            <td style=\"width:100%; text-align: center; padding: 5px\">\n");
+        sb.append("                                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif; color: #000000; font-size: 12px; line-height: 1; *line-height: normal; white-space: nowrap; font-weight: bold;\">");
+//        sb.append(customer);
+        sb.append("</span>\n");
+        sb.append("                                            </td>\n");
+        sb.append("                                        </tr>\n");
+        sb.append("                                        <tr>\n");
+        sb.append("                                            <td style=\"width:100%; text-align: center; padding: 5px\">\n");
+        sb.append("                                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif; color: #000000; font-size: 12px; line-height: 1; *line-height: normal; white-space: nowrap; font-weight: bold;\">");
+        sb.append(request.getParameter("inputFromDate"));
+        sb.append(" - ");
+        sb.append(request.getParameter("inputToDate"));
+        sb.append("</span>\n");
+        sb.append("                                            </td>\n");
+        sb.append("                                        </tr>\n");
+        sb.append("                                    </table>\n");
+        sb.append("                                </div>\n");
+        sb.append("                                <div style=\"float: right; width: 15%; margin: 0 auto;\">\n");
+//        sb.append("                                    <img width=\"74\" src=\"cid:img_0_0_2\" alt=\"");
+//        sb.append(customer);
+//        sb.append("\" title=\"");
+//        sb.append(customer);
+//        sb.append("\"/>\n");
+        sb.append("                                </div>\n");
+        sb.append("                            </td>\n");
+        sb.append("                        </tr>\n");
+        sb.append("                        <tr style=\"height:20px\">\n");
+        sb.append("                            <td colspan=\"7\"></td>\n");
+        sb.append("                        </tr>\n");
+        sb.append("                        <tr style=\"height:32px; border: 1px solid #CCCCCC; \">\n");
+        sb.append("                            <td colspan=\"4\" style=\"background-color: #ecf0f1; \"></td>\n");
+        sb.append("                            <td colspan=\"3\" style=\"background-color: #ecf0f1; text-indent: 0px;  vertical-align: middle;text-align: left;\">\n");
+        sb.append("                                <span style=\"font-family: Verdana, Arial, Helvetica, sans-serif; color: #c0392b; white-space: nowrap; font-size: 14px; font-weight: bold\">");
+//        sb.append(customer);
+        sb.append("</span>\n");
+        sb.append("                            </td>\n");
+        sb.append("                        </tr>\n");
+        sb.append("                        <tr style=\"height:16px\">\n");
+        sb.append("                            <td colspan=\"7\" style=\"border: 1px solid #CCCCCC; background-color: #c0392b; \"></td>\n");
+        sb.append("                        </tr>\n");
+        sb.append("                        <tr style=\"height:25px\">\n");
+        sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; background-color: #FBFCFC;\">\n");
+        sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 12px; line-height: 2.4; font-weight: bold;\">Date</span>\n");
+        sb.append("                            </td>\n");
+        sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; background-color: #FBFCFC;\">\n");
+        sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 12px; line-height: 2.4; font-weight: bold;\">Headline</span>\n");
+        sb.append("                            </td>\n");
+        sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; background-color: #FBFCFC;\">\n");
+        sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 12px; line-height: 2.4; font-weight: bold;\">Publication</span>\n");
+        sb.append("                            </td>\n");
+        sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; background-color: #FBFCFC;\">\n");
+        sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 12px; line-height: 2.4; font-weight: bold;\">Edition</span>\n");
+        sb.append("                            </td>\n");
+        sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; background-color: #FBFCFC;\">\n");
+        sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 12px; line-height: 2.4; font-weight: bold;\">Source</span>\n");
+        sb.append("                            </td>\n");
+        sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; background-color: #FBFCFC;\">\n");
+        sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 12px; line-height: 2.4; font-weight: bold;\">Page #</span>\n");
+        sb.append("                            </td>\n");
+        sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; background-color: #FBFCFC;\">\n");
+        sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 12px; line-height: 2.4; font-weight: bold;\">Image</span>\n");
+        sb.append("                            </td>\n");
+        sb.append("                        </tr>\n");
+        sb.append("                        <tr style=\"height:20px\">\n");
+        sb.append("                            <td colspan=\"7\" style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px; background-color: #EBE8E8;\"></td>\n");
+        sb.append("                        </tr>\n");
         for (Data d : datas) {
-
-            body.append("<tr>");
-            body.append("<td style=\"background-color:  #ffffff;\">" + d.getNewsDate() + "</td>");
-            if (d.getNewsPaper().endsWith(".com")) {
-                body.append(" <td style=\"background-color:  #ffffff;\"><a target=\"_blank\" href=\"" + d.getNewsPaper() + "\">" + d.getNewsPaper() + "</a></td>");
-            } else {
-                body.append(" <td style=\"background-color:  #ffffff;\">" + d.getNewsPaper() + "</td>");
-            }
+            sb.append("                        <tr style=\"height:40px\">\n");
+            sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\">\n");
+            sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 11px; line-height: 1.4;\">");
+            sb.append(d.getNewsDate());
+            sb.append("</span>\n");
+            sb.append("                            </td>\n");
             if (null == d.getImageFileName() || d.getImageFileName().length() == 0) {
-                body.append("<td style=\"background-color:  #ffffff;\">" + d.getHeadline() + "</td>");
+                sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\">\n");
+                sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 11px; line-height: 1.4;\">");
+                sb.append(d.getHeadline());
+                sb.append("</span>\n");
+                sb.append("                            </td>\n");
             } else {
-                body.append("<td style=\"background-color:  #ffffff;\"><a target=\"_blank\" href=\"" + formURL(request) + "/pages/image.jsp?action=getPhoto&imageId=" + d.getId() + "\">" + d.getHeadline() + "</a></td>");
+                sb.append("<td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\"><a target=\"_blank\" href=\"" + formURL(request) + "/pages/image.jsp?action=getPhoto&imageId=" + d.getId() + "\">" + d.getHeadline() + "</a></td>");
+            }
+            if (d.getNewsPaper().endsWith(".com")) {
+                sb.append(" <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\"><a target=\"_blank\" href=\"" + d.getNewsPaper() + "\">" + d.getNewsPaper() + "</a></td>");
+            } else {
+                sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\">\n");
+                sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 11px; line-height: 1.4;\">");
+                sb.append(d.getNewsPaper());
+                sb.append("</span>\n");
+                sb.append("                            </td>\n");
             }
             if (d.getEdition().startsWith("http")) {
-                body.append(" <td style=\"background-color:  #ffffff;\"><a target=\"_blank\" href=\"" + d.getEdition() + "\">" + d.getEdition() + "</a></td>");
+                sb.append(" <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\"><a target=\"_blank\" href=\"" + d.getEdition() + "\">" + d.getEdition() + "</a></td>");
             } else {
-                body.append("<td style=\"background-color:  #ffffff;\">" + d.getEdition() + "</td>");
+                sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\">\n");
+                sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 11px; line-height: 1.4;\">");
+                sb.append(d.getEdition());
+                sb.append("</span>\n");
+                sb.append("                            </td>\n");
             }
-            body.append("<td style=\"background-color:  #ffffff;\">" + d.getSource() + "</td>");
-            body.append("<td style=\"background-color:  #ffffff;\">" + d.getLanguage() + "</td>");
-            body.append("<td style=\"background-color:  #ffffff;\">" + d.getImageExists() + "</td>");
-            body.append("<td style=\"background-color:  #ffffff;\">" + d.getPageNo() + "</td>");
-            body.append("</td>");
-            body.append("</tr>");
+            sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\">\n");
+            sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 11px; line-height: 1.4;\">");
+            sb.append(d.getSource());
+            sb.append("</span>\n");
+            sb.append("                            </td>\n");
+            sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\">\n");
+            sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 11px; line-height: 1.4;\">");
+            sb.append(d.getPageNo());
+            sb.append("</span>\n");
+            sb.append("                            </td>\n");
+            sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\">\n");
+            sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 11px; line-height: 1.4;\">");
+            sb.append(d.getImageExists());
+            sb.append("</span>\n");
+            sb.append("                            </td>\n");
+            sb.append("</tr>");
         }
-        body.append("</tbody>");
-        body.append("</table>");
-        //   body.append("<a href=\"revvster.in\"><img src=\"../images/revvster.png\" width=\"50\" height=\"50\"></a>");
-        // body.append("<p>dfgdfhfgh</p>");
-        body.append("<p><img width=\"114\" src=\"cid:img_0_0_2\" alt=\"Revvster Technologies Pvt Ltd\" title=\"Revvster\"/></p>");
-        return body.toString();
+        sb.append("                        <tr style=\"height:15px\">\n");
+        sb.append("                            <td colspan=\"7\" style=\"\"></td>\n");
+        sb.append("                        </tr>                            \n");
+        sb.append("                        <tr style=\"height:20px\">\n");
+        sb.append("                            <td colspan=\"7\" style=\"border: 1px solid #CCCCCC; background-color: #c0392b; \"></td>\n");
+        sb.append("                        </tr>                        \n");
+        sb.append("                        <tr style=\"height:10px\">\n");
+        sb.append("                            <td colspan=\"7\" style=\"\"></td>\n");
+        sb.append("                        </tr>                            \n");
+        sb.append("                        <tr>\n");
+        sb.append("                            <td colspan=\"7\">\n");
+        sb.append("                                <div style=\"float: left; width: 15%; margin: 0 auto; padding: 20px 0 0 0\">\n");
+        sb.append("                                </div>\n");
+        sb.append("                                <div style=\"float: left; margin: 0 auto; width: 70%;\">\n");
+        sb.append("                                </div>\n");
+        sb.append("                                <div style=\"float: right; width: 15%; margin: 0 auto;\">\n");
+        sb.append("                                    <a href=\"www.revvster.in\">\n");
+        sb.append("                                        <img width=\"114\" src=\"cid:img_0_0_2\" alt=\"Revvster Inc.\" title=\"Revvster Inc.\"/>\n");
+        sb.append("                                    </a>\n");
+        sb.append("                                </div>\n");
+        sb.append("                            </td>\n");
+        sb.append("                        </tr>\n");
+        sb.append("                    </table>\n");
+        sb.append("                </td>\n");
+        sb.append("                <td width=\"5%\"></td>\n");
+        sb.append("            </tr>\n");
+        sb.append("        </table>\n");
+        sb.append("    </body>\n");
+        sb.append("</html>");
+        return sb.toString();
     }
 
     private String formURL(HttpServletRequest request) {

@@ -41,13 +41,13 @@
             /*font-weight: bold;*/
             letter-spacing: 2px;
             color: #c0392b;
-            border-bottom: 3px solid #3E3E3E;
+            border-bottom: 3px solid #C0C0C0;
         }
         .title2 {
             font-family: 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
             /*font-weight: bold;*/
             letter-spacing: 2px;
-            color: #3E3E3E;
+            color: #C0C0C0;
             border-bottom: 3px solid #c0392b;
         }
     </style>

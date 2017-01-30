@@ -60,6 +60,7 @@ public class ImageServlet extends HttpServlet {
         String jsonArray = new String();
         if (action != null) {
             Integer imageId = 0;
+            Integer id = 0;
             DashboardDao dashboardDao = new DashboardDaoImpl();
             List<Data> datas = new ArrayList<>();
             Data data = new Data();
@@ -75,16 +76,11 @@ public class ImageServlet extends HttpServlet {
                         response.setContentLength(imgData.length);
                         response.getOutputStream().write(imgData);
                         break;
-                    case "getCompressedPhoto":
-                        imageId = Integer.valueOf(request.getParameter("imageId"));
-                        data = dashboardDao.getPhoto(imageId);
-                        byte[] imagegData = data.getImage().getBytes(1, (int) data.getImage().length());
-                        // PageFormat pageFormat = new PageFormat();
-                        response.setHeader("expires", "0");
-                        response.setContentType("image/jpg");
-                        response.setContentLength(imagegData.length);
-                        response.getOutputStream().write(imagegData);
-                        break;                        
+                    case "getData":
+                        id = Integer.valueOf(request.getParameter("id"));
+                        data = dashboardDao.getData(id);
+                        jsonArray = gson.toJson(data);
+                        break;
                 }
             } catch (SQLException | NumberFormatException ex) {
                 logger.error(ex);

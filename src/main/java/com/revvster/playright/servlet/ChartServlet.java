@@ -10,12 +10,22 @@ import com.google.gson.GsonBuilder;
 import com.revvster.playright.dao.DashboardDao;
 import com.revvster.playright.dao.DashboardDaoImpl;
 import com.revvster.playright.model.User;
+import com.revvster.playright.ui.charts.BarChartData;
+import com.revvster.playright.ui.charts.ChartsUtil;
 import com.revvster.playright.ui.charts.LineChartData;
 import com.revvster.playright.ui.charts.PieChartData;
+import com.revvster.playright.util.DBConnectionManager;
 import com.revvster.playright.util.SystemConstants;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,7 +55,7 @@ public class ChartServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ParseException {
         logger.debug("processRequest::START");
         String action = request.getParameter("action");
         logger.info("processRequest::action::" + action);
@@ -55,15 +65,25 @@ public class ChartServlet extends HttpServlet {
             DashboardDao dashboardDao = new DashboardDaoImpl();
             response.setContentType("application/json");
             loggedInUser = (User) request.getSession().getAttribute(SystemConstants.LoggedInUser);
+            SimpleDateFormat dateFormatr = new SimpleDateFormat("dd-MM-yyyy");
+            String inputFromDate = "";
+            String inputToDate = "";
             Integer selectedComp = 0;
+            String selectedDateRange = "";
             Integer selectedProj = 0;
             Integer selectedLoc = 0;
             Integer userId = 0;
+            List<PieChartData> pc = new ArrayList<>();
+            List<BarChartData> bc = new ArrayList<>();
+            BarChartData bcd = null;
+            PieChartData pcd = null;
+            Timestamp inptFrom = null;
+            Timestamp inptTo = null;
             try {
                 switch (action) {
                     case "getConversionRateBySalesRep":
                         selectedProj = Integer.valueOf(request.getParameter("id"));
-                        
+
                         if (selectedProj != null && selectedProj > 0) {
                             LineChartData acd = dashboardDao.getConversionRateBySalesRep(selectedProj);
                             jsonArray = gson.toJson(acd);
@@ -71,17 +91,101 @@ public class ChartServlet extends HttpServlet {
                             jsonArray = getErrorJson("There was an error getting no of conversation rate");
                         }
                         break;
-                      case "getSalesQuotientBySalesRep":
+                    case "getSalesQuotientBySalesRep":
                         selectedProj = Integer.valueOf(request.getParameter("id"));
-                        
                         if (selectedProj != null && selectedProj > 0) {
-                            List<PieChartData> pcd = dashboardDao.getSalesQuotientBySalesRep(selectedProj);
-                            jsonArray = gson.toJson(pcd);
+                            pc = dashboardDao.getSalesQuotientBySalesRep(selectedProj);
+                            jsonArray = gson.toJson(pc);
                         } else {
                             jsonArray = getErrorJson("There was an error getting no of Sales Quotient");
                         }
                         break;
-                      
+                    case "getLanguageAnalytics":
+                        selectedDateRange = request.getParameter("selectedDateRange");
+                        inputFromDate = request.getParameter("inputFromDate");
+                        inputToDate = request.getParameter("inputToDate");
+                        if (inputFromDate != "" || inputToDate != "") {
+                            Date inptFromDate = dateFormatr.parse(inputFromDate);
+                            Date inptToDate = dateFormatr.parse(inputToDate);
+                            inptFrom = new Timestamp(inptFromDate.getTime());
+                            inptTo = new Timestamp(inptToDate.getTime());
+                            bcd = dashboardDao.getLanguageVsArticles(inptFrom, inptTo);
+                        } else {
+                            //  if (selectedDateRange != null) {
+                            bcd = dashboardDao.getLanguageVsArticles(ChartsUtil.DateRanges.valueOf(selectedDateRange));
+                            // }
+                        }
+                        jsonArray = gson.toJson(bcd);
+                        break;
+                    case "getEditionAnalytics":
+                        selectedDateRange = request.getParameter("selectedDateRange");
+                        inputFromDate = request.getParameter("inputFromDate");
+                        inputToDate = request.getParameter("inputToDate");
+                        if (inputFromDate != "" || inputToDate != "") {
+                            Date inptFromDate = dateFormatr.parse(inputFromDate);
+                            Date inptToDate = dateFormatr.parse(inputToDate);
+                            inptFrom = new Timestamp(inptFromDate.getTime());
+                            inptTo = new Timestamp(inptToDate.getTime());
+                            pcd = dashboardDao.getEditionVsArticles(inptFrom, inptTo);
+                        } else {
+                            //  if (selectedDateRange != null) {
+                            pcd = dashboardDao.getEditionVsArticles(ChartsUtil.DateRanges.valueOf(selectedDateRange));
+                            // }
+                        }
+                        jsonArray = gson.toJson(pcd);
+                        break;
+                    case "getJournalistDistribution":
+                        selectedDateRange = request.getParameter("selectedDateRange");
+                        inputFromDate = request.getParameter("inputFromDate");
+                        inputToDate = request.getParameter("inputToDate");
+                        if (inputFromDate != "" || inputToDate != "") {
+                            Date inptFromDate = dateFormatr.parse(inputFromDate);
+                            Date inptToDate = dateFormatr.parse(inputToDate);
+                            inptFrom = new Timestamp(inptFromDate.getTime());
+                            inptTo = new Timestamp(inptToDate.getTime());
+                            pcd = dashboardDao.getJournalistDistribution(inptFrom, inptTo);
+                        } else {
+                            //  if (selectedDateRange != null) {
+                            pcd = dashboardDao.getJournalistDistribution(ChartsUtil.DateRanges.valueOf(selectedDateRange));
+                            // }
+                        }
+                        jsonArray = gson.toJson(pcd);
+                        break;
+                    case "getTopEnglishPrintDistribution":
+                        selectedDateRange = request.getParameter("selectedDateRange");
+                        inputFromDate = request.getParameter("inputFromDate");
+                        inputToDate = request.getParameter("inputToDate");
+                        if (inputFromDate != "" || inputToDate != "") {
+                            Date inptFromDate = dateFormatr.parse(inputFromDate);
+                            Date inptToDate = dateFormatr.parse(inputToDate);
+                            inptFrom = new Timestamp(inptFromDate.getTime());
+                            inptTo = new Timestamp(inptToDate.getTime());
+                            bcd = dashboardDao.getTopEnglishPrintDistribution(inptFrom, inptTo);
+                        } else {
+                            //  if (selectedDateRange != null) {
+                            bcd = dashboardDao.getTopEnglishPrintDistribution(ChartsUtil.DateRanges.valueOf(selectedDateRange));
+                            // }
+                        }
+                        jsonArray = gson.toJson(bcd);
+                        break;
+                    case "getTopVernacularPrintDistribution":
+                        selectedDateRange = request.getParameter("selectedDateRange");
+                        inputFromDate = request.getParameter("inputFromDate");
+                        inputToDate = request.getParameter("inputToDate");
+                        if (!"".equals(inputFromDate) || !"".equals(inputToDate)) {
+                            Date inptFromDate = dateFormatr.parse(inputFromDate);
+                            Date inptToDate = dateFormatr.parse(inputToDate);
+                            inptFrom = new Timestamp(inptFromDate.getTime());
+                            inptTo = new Timestamp(inptToDate.getTime());
+                            bcd = dashboardDao.getTopVernacularPrintDistribution(inptFrom, inptTo);
+                        } else {
+                            //  if (selectedDateRange != null) {
+                            bcd = dashboardDao.getTopVernacularPrintDistribution(ChartsUtil.DateRanges.valueOf(selectedDateRange));
+                            // }
+                        }
+                        jsonArray = gson.toJson(bcd);
+                        break;
+
 //                    case "customerProfile":
 ////                        customer = customerDao.getCustomer(Integer.valueOf(request.getParameter("id")));
 ////                        if (customer != null) {
@@ -135,7 +239,11 @@ public class ChartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            java.util.logging.Logger.getLogger(ChartServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -149,7 +257,11 @@ public class ChartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            java.util.logging.Logger.getLogger(ChartServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

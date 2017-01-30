@@ -33,11 +33,11 @@ import org.apache.logging.log4j.Logger;
 @WebFilter(filterName = "SessionFilter", urlPatterns = {"/*"},
         initParams = {
             @WebInitParam(name = "no-validation-urls",
-                    value = "/login.jsp,/index.jsp,login.jsp,/login,/pages/image.jsp,/pages/printImage.jsp"),
+                    value = "/login.jsp,/index.jsp,login.jsp,/login,/pages/image.jsp,/pages/printImage.jsp,/pages/emailAnalytics.jsp"),
             @WebInitParam(name = "exclude-patterns",
                     value = ".css,.js,.woff2,.ttf,.png,.gif"),
             @WebInitParam(name = "exclude-url-patterns",
-                    value = "/secure/api,/api,/image")})
+                    value = "/secure/api,/api,/image,/chart")})
 public class SessionFilter implements Filter {
 
     private static final Logger logger = LogManager.getLogger(SessionFilter.class.getName());

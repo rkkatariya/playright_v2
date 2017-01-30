@@ -23,6 +23,7 @@ import com.revvster.playright.dao.EmailDaoImpl;
 import com.revvster.playright.dao.SettingDao;
 import com.revvster.playright.dao.SettingDaoImpl;
 import com.revvster.playright.model.Company;
+import com.revvster.playright.model.Data;
 import com.revvster.playright.model.Email;
 import com.revvster.playright.model.Project;
 import com.revvster.playright.model.Setting;
@@ -390,16 +391,19 @@ public class UserServlet extends HttpServlet {
                         }
                         break;
                     case "sendChartEmail":
+                        String body = null;
                         to = request.getParameter("inputEmailAddress");
+                        String content = request.getParameter("inputContent");
                         if (null != to && to.length() > 0) {
-                            String from = "revvster@gmail.com";
+                            String from = "playrightreports@gmail.com";
                             String subject = request.getParameter("inputSubject");
-                            String body = request.getParameter("emailBody");
+                            String chartsLink = formURL(request).concat("/pages/emailAnalytics.jsp");
+                            body = getHTMLBody(chartsLink, content);
                             EmailDao emailDao = new EmailDaoImpl();
                             SettingDao settingDao = new SettingDaoImpl();
                             try {
                                 Email email = new Email();
-                                email.setCompany(1);
+                                email.setCompany(loggedInUser.getCompany() == null ? 0 : loggedInUser.getCompany());
                                 email.setFrom(from);
                                 email.setCreatedBy(loggedInUser.getId());
                                 email.setTo(to);
@@ -408,10 +412,11 @@ public class UserServlet extends HttpServlet {
                                 email.setRequestedBy(loggedInUser.getId());
                                 email.setLastUpdatedBy(loggedInUser.getId());
                                 email.setSource("Send Email");
+                                // email.setCc(content);
                                 MimeBodyPart messageBodyPart = new MimeBodyPart();
                                 messageBodyPart.setContent(body, "text/html");
                                 Company c = new Company();
-                                c.setId(1);
+                                c.setId(loggedInUser.getCompany());
                                 Setting host = settingDao.getSetting(Settings.EmailHost.toString(), c);
                                 Setting port = settingDao.getSetting(Settings.EmailPort.toString(), c);
                                 Setting usrname = settingDao.getSetting(Settings.EmailUserName.toString(), c);
@@ -430,7 +435,7 @@ public class UserServlet extends HttpServlet {
                                             email.getTo(),
                                             email.getSubject(),
                                             email.getBody(),
-                                            new HashMap<String, String>(),
+                                            null,
                                             null
                                     );
                                     emailDao.updateEmailLogStatus(id, "Sent");
@@ -484,6 +489,21 @@ public class UserServlet extends HttpServlet {
             user.setActive(1);
         }
         return user;
+    }
+
+    private String formURL(HttpServletRequest request) {
+        return request.getScheme().concat("://").concat(request.getServerName()).concat(":").concat(Integer.toString(request.getServerPort())).concat(request.getContextPath());
+    }
+
+    private String getHTMLBody(String link, String content) {
+        StringBuilder sb = new StringBuilder("<html><body> \n");
+        sb.append("<div>" + content.replaceAll("\n", "<br/>") + "</div>");
+        sb.append("<p> Click <a href=\"" + link + "\">here</a> to view the charts.</p>");
+        sb.append("<div><br/></div>");
+        sb.append("<div><br/></div>");
+        sb.append("<p><strong>Disclaimer:</strong>All features,functionalities,graphs,analytics etc might not work on ios/apple devices.");
+        sb.append("</body></html>");
+        return sb.toString();
     }
 
     private User getUserFromReq(HttpServletRequest request) {

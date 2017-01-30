@@ -77,7 +77,7 @@
                 <!-- Main content -->
                 <section class="content">
                     <div class="row-sm-12">                       
-                        <h2 class="box-title" align='center'>Playright Media Analysis</h3> 
+                        <h2 class="box-title" align='center'>PlayRight Media Analysis</h3> 
                             <div id="getData">
                             </div>
                             <div class="col-sm-6"></div>                       
@@ -97,7 +97,7 @@
                             <a>
                                 <!-- The user image in the navbar-->
 
-                                <img class="col-sm-12" src="../image?action=getCompressedPhoto&imageId=<%=request.getParameter("id")%>" onerror="this.src='../adminlte2/dist/img/male.png'" alt="Image"/>                    
+                                <img class="col-sm-12" src="../image?action=getPhoto&imageId=<%=request.getParameter("id")%>"  alt="Image"/>                    
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
 
                             </a>
@@ -120,41 +120,41 @@
         <script src="../adminlte2/plugins/datepicker/js/bootstrap-datepicker.min.js"></script>            
         <jsp:include page="adminlte_js.jsp"/>
         <script type="text/javascript">
-                            var id = <%=request.getParameter("id")%>
-                            $(function () {
-                                $.ajax({
-                                    url: "../dashboard?action=getData",
-                                    data: 'id=' + id,
-                                    type: "POST",
-                                    dataType: "json"
-                                })
-                                        .done(function (data, textStatus, jqXHR) {                                           
-                                            $("#getData").append(getData(data));
+        var id = <%=request.getParameter("id")%>
+        $(function () {
+            $.ajax({
+                url: "../image?action=getData",
+                data: 'id=' + id,
+                type: "POST",
+                dataType: "json"
+            })
+                    .done(function (data, textStatus, jqXHR) {                                           
+                        $("#getData").append(getData(data));
 
-                                        })
-                                        .fail(function (jqXHR, textStatus, errorThrown) {
-                                            var respJson = JSON.parse(jqXHR.responseText);
-                                            var response = jQuery.parseJSON(respJson);
-                                            $.alert(response.errorMsg, "Error !!");
-                                        });
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        var respJson = JSON.parse(jqXHR.responseText);
+                        var response = jQuery.parseJSON(respJson);
+                        $.alert(response.errorMsg, "Error !!");
+                    });
 
-                                function getData(data) {
-                                    return '<h4 class="box-title" align="center">' +
-                                            data.newsDate +
-                                            ',' +
-                                            data.newsPaper +
-                                            ',' +
-                                            'Page No.' +
-                                            data.pageNo +
-                                            '</h4>' +
-                                            '<h3 class="box-title" align="center">' +
-                                            '<strong>' +
-                                            data.headline +
-                                            '</strong>' +
-                                            '</h3>';
-                                }
+            function getData(data) {
+                return '<h4 class="box-title" align="center">' +
+                        convertDate(data.newsDate) +
+                        ', ' +
+                        data.newsPaper +
+                        ', ' +
+                        'Page No. ' +
+                        data.pageNo +
+                        '</h4>' +
+                        '<h3 class="box-title" align="center">' +
+                        '<strong>' +
+                        data.headline +
+                        '</strong>' +
+                        '</h3>';
+            }
 
-                            });
+        });
 
         </script> 
 
