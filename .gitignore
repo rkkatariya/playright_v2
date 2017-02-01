@@ -1,2 +1,6 @@
 *.netbeans_automatic_build
+<<<<<<< HEAD
 /target/
+=======
+/target/
+>>>>>>> origin/master
