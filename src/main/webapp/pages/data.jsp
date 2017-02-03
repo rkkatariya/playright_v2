@@ -672,7 +672,7 @@
                         {
                             "render": function (data, type, columns) {
                                 //                                console.log(columns["manager"]);
-                                if (columns["imageFileName"] === 0) {
+                                if (columns["fileSize"] === 0) {
                                     return '';
                                 } else {
                                     return '<a href="image.jsp?imageId=' + columns["id"] + '" target="_blank" >img</a>';
@@ -793,10 +793,10 @@
                     $("form#editData :input[id=inputCirculationFigure]").val(data["circulationFigure"]);
                     $("form#editData :input[id=inputJournalistFactor]").val(data["journalistFactor"]);
                     $("form#editData :input[id=inputQuantitativeAVE]").val(data["quantitativeAVE"]);
-                    $("form#editData :input[id=inputImage]").val("");
+                    $("form#editData :input[id=inputImage]").val(data["image"]);
                     $("form#editData :input[id=inputFileSize]").val(data["fileSize"]);
                     $("form#editData :input[id=inputFileType]").val(data["fileType"]);
-                    //console.log(data["binaryData"]);
+                   // console.log(data["image"]);
                 });
 
                 $("#submitCreateData").on("click", function () {

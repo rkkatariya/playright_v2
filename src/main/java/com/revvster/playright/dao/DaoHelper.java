@@ -266,7 +266,7 @@ public class DaoHelper {
         data.setSupplement(rs.getString("supplement"));
         data.setTotalArticleSize(rs.getInt("total_article_size"));
         data.setCirculationFigure(rs.getInt("circulation_figure"));
-        data.setImageFileName("image_filename");
+        data.setImageFileName(rs.getString("image_filename"));
         data.setImageExists(rs.getString("image_exists"));
         data.setJournalistFactor(rs.getInt("journalist_factor")); 
         data.setCreatedBy(rs.getInt("created_by"));

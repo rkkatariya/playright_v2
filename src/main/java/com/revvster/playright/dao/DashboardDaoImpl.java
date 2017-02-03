@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -705,14 +706,14 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
                 + "height, width, total_article_size, \n"
                 + "circulation_figure, quantitative_AVE, journalist_factor, \n"
                 + "image, image_exists, file_size, file_type,\n"
-                + " created_by, last_updated_by) \n"
+                + " created_by, last_updated_by, image_filename) \n"
                 + "VALUES (?, ?, ?, \n"
                 + "?, ?, ?, \n"
                 + "?, ?, \n"
                 + "?, ?, ?, \n"
                 + "?, ?, ?,\n"
                 + "?, ?, ?, ?,\n"
-                + "?, ?)");
+                + "?, ?, ?)");
         ps.setTimestamp(1, data.getNewsDate());
         ps.setString(2, data.getNewsPaper());
         ps.setString(3, data.getLanguage());
@@ -733,8 +734,8 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         ps.setString(18, data.getFileType());
         ps.setInt(19, data.getCreatedBy());
         ps.setInt(20, data.getLastUpdatedBy());
-        // ps.setInt(18, data.getId());
-        //ps.setInt(18, data.getActive());
+        ps.setString(21, data.getImageFileName());
+
         ps.executeUpdate();
         Integer id = getLastInsertId();
         if (id > 0) {
@@ -749,7 +750,9 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
     public void updateData(Data data)
             throws SQLException {
         logger.debug("updateData::START::");
-        PreparedStatement ps = conn.prepareStatement("update analytics_data\n"
+        PreparedStatement ps;
+
+        ps = conn.prepareStatement("update analytics_data\n"
                 + "set news_date = ?,\n"
                 + "news_paper = ?,\n"
                 + "language = ?,\n"
@@ -764,11 +767,12 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
                 + "circulation_figure = ?,\n"
                 + "quantitative_AVE = ?,\n"
                 + "journalist_factor = ?,\n"
-                + "image = ?,\n"
+                //  + "image = ?,\n"
                 + "image_exists = ?,\n"
-                + "file_size = ?,\n"
-                + "file_type = ?,\n"
+                // + "file_size = ?,\n"
+                //  + "file_type = ?,\n"
                 + "last_updated_by = ?\n"
+                // + "image_filename = ?\n"
                 + "where id = ?");
         ps.setTimestamp(1, data.getNewsDate());
         ps.setString(2, data.getNewsPaper());
@@ -784,14 +788,30 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         ps.setInt(12, data.getCirculationFigure());
         ps.setInt(13, data.getQuantitativeAVE());
         ps.setInt(14, data.getJournalistFactor());
-        ps.setBlob(15, data.getImage());
-        ps.setString(16, data.getImageExists());
-        ps.setInt(17, data.getFileSize());
-        ps.setString(18, data.getFileType());
-        ps.setInt(19, data.getLastUpdatedBy());
-        ps.setInt(20, data.getId());
+        //  ps.setBlob(15, data.getImage());
+        ps.setString(15, data.getImageExists());
+        //  ps.setInt(17, data.getFileSize());        
+        //  ps.setString(18, data.getFileType());
+        ps.setInt(16, data.getLastUpdatedBy());
+        //  ps.setString(20, data.getImageFileName());
+        ps.setInt(17, data.getId());
         ps.executeUpdate();
         close(ps);
+        if (data.getImage() != null) {
+            ps = conn.prepareStatement("update analytics_data\n"
+                    + "set image = ?,\n"
+                    + "file_size = ?,\n"
+                    + "file_type = ?,\n"
+                    + "image_filename = ?\n"
+                    + "where id = ?");
+            ps.setBlob(1, data.getImage());
+            ps.setInt(2, data.getFileSize());
+            ps.setString(3, data.getFileType());
+            ps.setString(4, data.getImageFileName());
+            ps.setInt(5, data.getId());
+            ps.executeUpdate();
+            close(ps);
+        }
         logger.debug("updateData::End");
     }
 
