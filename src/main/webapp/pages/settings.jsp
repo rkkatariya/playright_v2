@@ -262,7 +262,7 @@
                         "type": "POST",
                         "data": function (d) {
                             d.selectedCompany = selectedCompany,
-                                    d.resource = "catalog";
+                                    d.resource = "setting";
                         }
                     },
                     "columns": [

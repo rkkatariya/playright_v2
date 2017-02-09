@@ -8,7 +8,7 @@
 <footer class="main-footer" id="footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-        PlayRight
+<!--        PlayRight-->
     </div>
     <!-- Default to the left -->
     <strong>Copyright &copy; 2017 <a href="http://revvster.in/">Revvster Technologies India Pvt Ltd</a>.</strong> All rights reserved.

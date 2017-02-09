@@ -43,8 +43,11 @@
         <title>Data</title>
 
         <jsp:include page="header.jsp"/>
-        <jsp:include page="datatables_css.jsp"/>
+        <%--<jsp:include page="datatables_css.jsp"/>--%>
 
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
         <link rel="stylesheet" href="../adminlte2/plugins/select2/select2.min.css">
         <link rel="stylesheet" href="../adminlte2/bootstrap/css/bootstrap.min.css"> 
         <link rel="stylesheet" href="../adminlte2/plugins/datepicker/css/bootstrap-datepicker3.min.css">
@@ -535,8 +538,8 @@
                                     <button type="button" id="btnSendEmail" class="btn btn-primary" data-toggle="modal" data-target="#modalSendEmail">Email Data</button>
                                     <%}%>
                                 </div>
-                                <div class="box-body table-responsive">
-                                    <table id="list_data" class="table table-bordered table-striped">
+                                <div class="box-body">
+                                    <table id="list_data" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>                                               
                                                 <th>News Date</th>
@@ -595,13 +598,20 @@
 
         <jsp:include page="control_sidebar.jsp"/>
         <jsp:include page="footer.jsp"/>
-        <jsp:include page="datatables_js.jsp"/>
+        <%--<jsp:include page="datatables_js.jsp"/>--%>
+        <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
         <script src="../adminlte2/plugins/select2/select2.full.min.js"></script>
         <script src="../adminlte2/plugins/datepicker/js/bootstrap-datepicker.min.js"></script>  
-        <script src="../adminlte2/plugins/datatables/extensions/jszip/jszip.min.js"></script> 
+<!--        <script src="../adminlte2/plugins/datatables/extensions/jszip/jszip.min.js"></script> 
         <script src="../DataTables/Buttons-1.1.0/js/buttons.html5.min.js"></script>
         <script src="../DataTables/Buttons-1.1.0/js/buttons.print.min.js"></script>
-        <script src="../DataTables/Buttons-1.1.0/js/buttons.colVis.min.js"></script>
+        <script src="../DataTables/Buttons-1.1.0/js/buttons.colVis.min.js"></script>-->
         <script src="../adminlte2/plugins/datepicker/js/bootstrap-datepicker.min.js"></script>
         <script src="../jquery-validation/js/jquery.validate.min.js"></script>
         <script src="../jquery-validation/js/additional-methods.min.js"></script>
