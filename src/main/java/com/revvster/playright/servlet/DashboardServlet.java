@@ -533,7 +533,7 @@ public class DashboardServlet extends HttpServlet {
         }
     }
 
-    private String getHTMLBody(HttpServletRequest request, List<Data> datas) {
+    private String getHTMLBody(HttpServletRequest request, List<Data> datas) throws ParseException {
         StringBuilder sb = new StringBuilder("    <head>  \n");
         sb.append("        <title></title>  \n");
         sb.append("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>  \n");
@@ -639,7 +639,7 @@ public class DashboardServlet extends HttpServlet {
             sb.append("                        <tr style=\"height:40px\">\n");
             sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\">\n");
             sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 11px; line-height: 1.4;\">");
-            sb.append(d.getNewsDate());
+            sb.append(d.getNewsDate().toString().split(" ")[0]);
             sb.append("</span>\n");
             sb.append("                            </td>\n");
             if (null == d.getImageFileName() || d.getImageFileName().length() == 0) {
