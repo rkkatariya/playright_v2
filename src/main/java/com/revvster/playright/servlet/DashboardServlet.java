@@ -296,6 +296,11 @@ public class DashboardServlet extends HttpServlet {
                         jsonArray = gson.toJson(datas);
                         jsonArray = "{\n\"data\":\n" + jsonArray + "\n}";
                         break;
+                    case "listDistinctLanguages":
+                        List<String> languages = dashboardDao.getDistinctLanguage();
+                        jsonArray = gson.toJson(languages);
+                        jsonArray = "{\n\"data\":\n" + jsonArray + "\n}";
+                        break;                   
                     case "getPhoto":
                         imageId = Integer.valueOf(request.getParameter("imageId"));
                         data = dashboardDao.getPhoto(imageId);
@@ -443,11 +448,13 @@ public class DashboardServlet extends HttpServlet {
                         String inputSource = "";
                         //  String[] inputNewsPaper = {};
                         String inputNewsPaper = "";
+                        String inputCustomer = "";
+                        String inputImageExist = "";
                         if (request.getParameter("inputEdition") != null) {
                             inputEdition = request.getParameter("inputEdition");
                         }
-                        if (request.getParameter("inputLanguage") != null) {
-                            inputLanguage = request.getParameter("inputLanguage");
+                        if (request.getParameter("selectLanguage") != null) {
+                            inputLanguage = request.getParameter("selectLanguage");
                         }
                         if (request.getParameter("inputSource") != null) {
                             inputSource = request.getParameter("inputSource");
@@ -455,9 +462,15 @@ public class DashboardServlet extends HttpServlet {
                         if (request.getParameter("inputNewsPaper") != null) {
                             inputNewsPaper = request.getParameter("inputNewsPaper");
                         }
+                        if (request.getParameter("inputCustomer") != null) {
+                            inputCustomer = request.getParameter("inputCustomer");
+                        }
+                        if (request.getParameter("inputImageExists") != null) {
+                            inputImageExist = request.getParameter("inputImageExists");
+                        }
 
                         datas = dashboardDao.getDataForEmail(fromD, toD,
-                                inputLanguage, inputEdition, inputSource, inputNewsPaper);
+                                inputLanguage, inputEdition, inputSource, inputNewsPaper, inputCustomer, inputImageExist);
 
                         body = getHTMLBody(request, datas);
                         try {
@@ -649,7 +662,7 @@ public class DashboardServlet extends HttpServlet {
                 sb.append("</span>\n");
                 sb.append("                            </td>\n");
             } else {
-                sb.append("<td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\"><a target=\"_blank\" href=\"" + formURL(request) + "/pages/image.jsp?action=getPhoto&imageId=" + d.getId() + "\">" + d.getHeadline() + "</a></td>");
+                sb.append("<td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\"><span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 11px; line-height: 1.4;\"><a target=\"_blank\" href=\"" + formURL(request) + "/pages/image.jsp?action=getPhoto&imageId=" + d.getId() + "\">" + d.getHeadline() + "</a></span></td>");
             }
             if (d.getNewsPaper().endsWith(".com")) {
                 sb.append(" <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\"><a target=\"_blank\" href=\"" + d.getNewsPaper() + "\">" + d.getNewsPaper() + "</a></td>");
@@ -661,7 +674,7 @@ public class DashboardServlet extends HttpServlet {
                 sb.append("                            </td>\n");
             }
             if (d.getEdition().startsWith("http")) {
-                sb.append(" <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\"><a target=\"_blank\" href=\"" + d.getEdition() + "\">" + d.getEdition() + "</a></td>");
+                sb.append(" <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\"><span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 11px; line-height: 1.4;\"><a target=\"_blank\" href=\"" + d.getEdition() + "\">Web link</a></span></td>");
             } else {
                 sb.append("                            <td style=\"border: 1px solid #CCCCCC; text-indent: 0px;  vertical-align: middle; text-align: center; padding: 3px;\">\n");
                 sb.append("                                <span style=\"font-family: 'Trebuchet MS', Helvetica, sans-serif, Monaco, monospace; color: #000000; font-size: 11px; line-height: 1.4;\">");
@@ -752,9 +765,9 @@ public class DashboardServlet extends HttpServlet {
         data.setWidth(Integer.valueOf(request.getParameter("inputWidth")));
         data.setTotalArticleSize(Integer.valueOf(request.getParameter("inputTotalArticleSize")));
         data.setCirculationFigure(Integer.valueOf(request.getParameter("inputCirculationFigure")));
-        data.setQuantitativeAVE(Integer.valueOf(request.getParameter("inputQuantitativeAVE")));
+        data.setCustomer(request.getParameter("inputCustomer"));
         data.setJournalistFactor(Integer.valueOf(request.getParameter("inputJournalistFactor")));
-        
+
         try {
             if (request.getPart("inputImage") != null) {
                 filePart = request.getPart("inputImage");
@@ -798,7 +811,7 @@ public class DashboardServlet extends HttpServlet {
             data.setNewsDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
         }
         data.setNewsPaper(request.getParameter("inputNewsPaper"));
-        data.setLanguage(request.getParameter("inputLanguage"));
+        data.setLanguage(request.getParameter("inputLang"));
         data.setHeadline(request.getParameter("inputHeadline"));
         data.setEdition(request.getParameter("inputEdition"));
         data.setSupplement(request.getParameter("inputSupplement"));
@@ -809,7 +822,7 @@ public class DashboardServlet extends HttpServlet {
         data.setWidth(Integer.valueOf(request.getParameter("inputWidth")));
         data.setTotalArticleSize(Integer.valueOf(request.getParameter("inputTotalArticleSize")));
         data.setCirculationFigure(Integer.valueOf(request.getParameter("inputCirculationFigure")));
-        data.setQuantitativeAVE(Integer.valueOf(request.getParameter("inputQuantitativeAVE")));
+        data.setCustomer(request.getParameter("inputCustomer"));
         data.setJournalistFactor(Integer.valueOf(request.getParameter("inputJournalistFactor")));
         try {
             if (request.getPart("inputImage") != null) {

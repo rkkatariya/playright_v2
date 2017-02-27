@@ -108,24 +108,33 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label for="inputCustomer">Customer</label>
+                                        <input type="text" class="form-control" id="inputCustomer" name="inputCustomer" placeholder="Customer">
+                                    </div>
+                                    <div class="form-group">
                                         <label for="inputNewsPaper">News Paper</label>
                                         <input type="text" class="form-control" id="inputNewsPaper" name="inputNewsPaper" placeholder="News Paper">
                                     </div>
                                     <div class="form-group">
                                         <label for="inputLanguage">Language</label>
                                         <select id="inputLanguage" name="inputLanguage" class="form-control" style="width: 100%;" >
-                                            <option value="English">English</option>
-                                            <option value="Kannada">Kannada</option>
-                                            <option value="Telugu">Telugu</option>
-                                            <option value="Urdu">Urdu</option>
-                                            <option value="Malayalam">Malayalam</option>
-                                            <option value="Marathi">Marathi</option>
-                                            <option value="Hindi">Hindi</option>
-                                            <option value="Tamil">Tamil</option>
-                                            <option value="Bengali">Bengali</option>
-                                            <option value="Others">Others</option>
                                         </select>                            
                                     </div>
+                                    <!--                                    <div class="form-group">
+                                                                            <label for="inputLanguage">Language</label>
+                                                                            <select id="inputLanguage" name="inputLanguage" class="js-example-tags" style="width: 100%;" >
+                                                                                <option value="">Select Language</option>
+                                                                                <option value="English">English</option>
+                                                                                <option value="Kannada">Kannada</option>
+                                                                                <option value="Telugu">Telugu</option>
+                                                                                <option value="Urdu">Urdu</option>
+                                                                                <option value="Malayalam">Malayalam</option>
+                                                                                <option value="Marathi">Marathi</option>
+                                                                                <option value="Hindi">Hindi</option>
+                                                                                <option value="Tamil">Tamil</option>
+                                                                                <option value="Bengali">Bengali</option>                                            
+                                                                            </select>                            
+                                                                        </div>-->
                                     <div class="form-group">
                                         <label for="inputHeadline">Headline</label>
                                         <input type="text" class="form-control" id="inputHeadline" name="inputHeadline" placeholder="Headline">
@@ -157,14 +166,15 @@
                                         </div>                                   
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="inputPageNo">Page No</label>
-                                        <input type="number" class="form-control" id="inputPageNo" name="inputPageNo" placeholder="Page No">
-                                    </div>
+
                                 </div>
                                 <div class="col-sm-2">                                    
                                 </div>                                                                
                                 <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label for="inputPageNo">Page No</label>
+                                        <input type="number" class="form-control" id="inputPageNo" name="inputPageNo" placeholder="Page No">
+                                    </div>
                                     <div class="form-group">
                                         <label for="inputHeight">Height</label>
                                         <input type="number" class="form-control" id="inputHeight" name="inputHeight" placeholder="Height">
@@ -183,12 +193,7 @@
                                     <div class="form-group">
                                         <label for="inputCirculationFigure">Circulation Figure</label>
                                         <input type="number" class="form-control" id="inputCirculationFigure" name="inputCirculationFigure" placeholder="Circulation Figure">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="inputQuantitativeAVE">Quantitative AVE</label>
-                                        <input type="number" class="form-control" id="inputQuantitativeAVE" name="inputQuantitativeAVE" placeholder="Quantitative AVE">
-                                    </div>
+                                    </div>                                   
 
                                     <div class="form-group">
                                         <label for="inputJournalistFactor">Journalist Factor</label>
@@ -258,22 +263,16 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inputNewsPaper">News Paper</label>
-                                        <input type="text" class="form-control" id="inputNewsPaper" name="inputNewsPaper" placeholder="News Paper">
+                                        <label for="inputCustomer">Customer</label>
+                                        <input type="text" class="form-control" id="inputCustomer" name="inputCustomer" placeholder="Customer">
                                     </div>
                                     <div class="form-group">
-                                        <label for="inputLanguage">Language</label>
-                                        <select id="inputLanguage" name="inputLanguage" class="form-control" style="width: 100%;" >
-                                            <option value="English">English</option>
-                                            <option value="kannada">Kannada</option>
-                                            <option value="Telugu">Telugu</option>
-                                            <option value="urdu">Urdu</option>
-                                            <option value="malayalam">Malayalam</option>
-                                            <option value="marathi">Marathi</option>
-                                            <option value="Hindi">Hindi</option>
-                                            <option value="Tamil">Tamil</option>
-                                            <option value="bengali">Bengali</option>
-                                            <option value="others">Others</option>
+                                        <label for="inputNewsPaper">News Paper</label>
+                                        <input type="text" class="form-control" id="inputNewsPaper" name="inputNewsPaper" placeholder="News Paper">
+                                    </div>                                    
+                                    <div class="form-group">
+                                        <label for="inputLang">Language</label>
+                                        <select id="inputLang" name="inputLang" class="form-control" style="width: 100%;" >
                                         </select>                            
                                     </div>
                                     <div class="form-group">
@@ -307,14 +306,14 @@
                                         </div>                                   
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="inputPageNo">Page No</label>
-                                        <input type="text" class="form-control" id="inputPageNo" name="inputPageNo" placeholder="Page No">
-                                    </div>
                                 </div>
                                 <div class="col-sm-2">                                    
                                 </div>                                                                
                                 <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label for="inputPageNo">Page No</label>
+                                        <input type="text" class="form-control" id="inputPageNo" name="inputPageNo" placeholder="Page No">
+                                    </div>
 
                                     <div class="form-group">
                                         <label for="inputHeight">Height</label>
@@ -334,12 +333,7 @@
                                     <div class="form-group">
                                         <label for="inputCirculationFigure">Circulation Figure</label>
                                         <input type="text" class="form-control" id="inputCirculationFigure" name="inputCirculationFigure" placeholder="Circulation Figure">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="inputQuantitativeAVE">Quantitative AVE</label>
-                                        <input type="text" class="form-control" id="inputQuantitativeAVE" name="inputQuantitativeAVE" placeholder="Quantitative AVE">
-                                    </div>
+                                    </div>                                   
 
                                     <div class="form-group">
                                         <label for="inputJournalistFactor">Journalist Factor</label>
@@ -427,36 +421,18 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inputLanguage">Language</label>
-                                        <select id="inputLanguage" name="inputLanguage" class="form-control" style="width: 100%;" >
-                                            <option value="">Select Language</option>
-                                            <option value="English">English</option>
-                                            <option value="Kannada">Kannada</option>
-                                            <option value="Telugu">Telugu</option>
-                                            <option value="Urdu">Urdu</option>
-                                            <option value="Malayalam">Malayalam</option>
-                                            <option value="Marathi">Marathi</option>
-                                            <option value="Hindi">Hindi</option>
-                                            <option value="Tamil">Tamil</option>
-                                            <option value="Bengali">Bengali</option>                                           
-                                        </select>
+                                        <label for="inputCustomer">Customer</label>
+                                        <input type="text" class="form-control" id="inputCustomer" name="inputCustomer" placeholder="Customer">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="selectLanguage">Language</label>
+                                        <select id="selectLanguage" name="selectLanguage" class="form-control" style="width: 100%;" >
+                                        </select>                            
                                     </div>
                                     <div class="form-group">
                                         <label for="inputEdition">Edition</label>
-                                        <select id="inputEdition" name="inputEdition" class="form-control" style="width: 100%;" >
-                                            <option value="">Select Edition</option>
-                                            <option value="Mumbai">Mumbai</option>
-                                            <option value="Bangalore">Bangalore</option>
-                                            <option value="New Delh">New Delhi</option>
-                                            <!--                                            <option value="urdu">Urdu</option>
-                                                                                        <option value="malayalam">Malayalam</option>
-                                                                                        <option value="marathi">Marathi</option>
-                                                                                        <option value="hindi">Hindi</option>
-                                                                                        <option value="tamil">Tamil</option>
-                                                                                        <option value="bengali">Bengali</option>
-                                                                                        <option value="others">Others</option>-->
-                                        </select>
-                                    </div>
+                                        <input type="text" class="form-control" id="inputEdition" name="inputEdition" placeholder="Edition">
+                                    </div>                                    
                                     <div class="form-group">
                                         <label for="inputSource">Source</label>
                                         <input type="text" class="form-control" id="inputSource" name="inputSource" placeholder="Source">
@@ -464,6 +440,28 @@
                                     <div class="form-group">
                                         <label for="inputNewsPaper">News Paper</label>
                                         <input type="text" class="form-control" id="inputNewsPaper" name="inputNewsPaper" placeholder="News Paper">
+                                    </div>                                    
+                                    <!--                                    <div class="form-group">                                        
+                                                                            <label for="inputImageExists">Image</label>
+                                                                            <select id="inputImageExists" name="inputImageExists" class="form-control" style="width: 100%;" >
+                                                                                <option value="">Select Filter</option>
+                                                                                <option value="Y">With Image</option>
+                                                                                <option value="N">Without Image</option>
+                                                                                                                            <option value="">Both</option>                                                                                      
+                                                                            </select>
+                                                                        </div>-->
+                                    <div class="form-group">
+                                        <label for="inputImageExists" class="control-label">Image Exists</label>
+                                        <div class="radio">                                       
+                                            <label>
+                                                <input type="radio" name="inputImageExists" value="Y">
+                                                With Image
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="inputImageExists" value="N">
+                                                Without Image
+                                            </label>
+                                        </div>                                   
                                     </div>
                                 </div>
                                 <div class="col-sm-2">                                    
@@ -555,7 +553,7 @@
                                                 <th>Width</th>
                                                 <th>Total Article Size</th>
                                                 <th>Circulation Figure</th>
-                                                <th>Quantitative AVE</th>
+                                                <th>Customer</th>
                                                 <th>Journalist Factor</th>  
                                                 <th>Last updated</th>  
                                                 <th>Image</th>
@@ -577,7 +575,7 @@
                                                 <th>Width</th>
                                                 <th>Total Article Size</th>
                                                 <th>Circulation Figure</th>
-                                                <th>Quantitative AVE</th>
+                                                <th>Customer</th>
                                                 <th>Journalist Factor</th>  
                                                 <th>Last updated</th>  
                                                 <th>Image</th>
@@ -608,10 +606,10 @@
         <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
         <script src="../adminlte2/plugins/select2/select2.full.min.js"></script>
         <script src="../adminlte2/plugins/datepicker/js/bootstrap-datepicker.min.js"></script>  
-<!--        <script src="../adminlte2/plugins/datatables/extensions/jszip/jszip.min.js"></script> 
-        <script src="../DataTables/Buttons-1.1.0/js/buttons.html5.min.js"></script>
-        <script src="../DataTables/Buttons-1.1.0/js/buttons.print.min.js"></script>
-        <script src="../DataTables/Buttons-1.1.0/js/buttons.colVis.min.js"></script>-->
+        <!--        <script src="../adminlte2/plugins/datatables/extensions/jszip/jszip.min.js"></script> 
+                <script src="../DataTables/Buttons-1.1.0/js/buttons.html5.min.js"></script>
+                <script src="../DataTables/Buttons-1.1.0/js/buttons.print.min.js"></script>
+                <script src="../DataTables/Buttons-1.1.0/js/buttons.colVis.min.js"></script>-->
         <script src="../adminlte2/plugins/datepicker/js/bootstrap-datepicker.min.js"></script>
         <script src="../jquery-validation/js/jquery.validate.min.js"></script>
         <script src="../jquery-validation/js/additional-methods.min.js"></script>
@@ -627,6 +625,9 @@
             var inputToDate = $("#inputToDate");
             var inputNewsDate = $("#inputNewsDate");
             var sendEmail = $('form#sendEmail');
+            var selectLanguage = $("#selectLanguage");
+            var inputLanguage = $("#inputLanguage");
+            var inputLang = $("#inputLang");
             $(function () {
                 table = $('#list_data').DataTable({
                     "paging": true,
@@ -661,7 +662,7 @@
                         {"data": "width"},
                         {"data": "totalArticleSize"},
                         {"data": "circulationFigure"},
-                        {"data": "quantitativeAVE"},
+                        {"data": "customer"},
                         {"data": "journalistFactor"},
                         {"data": "lastUpdatedOn"},
                         {"data": ""}
@@ -789,7 +790,7 @@
                     $("form#editData :input[id=inputId]").val(data["id"]);
                     $("form#editData :input[id=inputNewsDate]").val(convertDate(data["newsDate"]));
                     $("form#editData :input[id=inputNewsPaper]").val(data["newsPaper"]);
-                    $("form#editData :input[id=inputLanguage]").val(data["language"]);
+                    $("form#editData :input[id=inputLang]").val(data["language"]);
                     $("form#editData :input[id=inputHeadline]").val(data["headline"]);
                     $("form#editData :input[id=inputEdition]").val(data["edition"]);
                     $("form#editData :input[id=inputSupplement]").val(data["supplement"]);
@@ -802,11 +803,11 @@
                     $("form#editData :input[id=inputTotalArticleSize]").val(data["totalArticleSize"]);
                     $("form#editData :input[id=inputCirculationFigure]").val(data["circulationFigure"]);
                     $("form#editData :input[id=inputJournalistFactor]").val(data["journalistFactor"]);
-                    $("form#editData :input[id=inputQuantitativeAVE]").val(data["quantitativeAVE"]);
+                    $("form#editData :input[id=inputCustomer]").val(data["customer"]);
                     $("form#editData :input[id=inputImage]").val(data["image"]);
                     $("form#editData :input[id=inputFileSize]").val(data["fileSize"]);
                     $("form#editData :input[id=inputFileType]").val(data["fileType"]);
-                   // console.log(data["image"]);
+                    //  console.log(data["language"]);
                 });
 
                 $("#submitCreateData").on("click", function () {
@@ -886,10 +887,6 @@
                             });
                 });
 
-                //     $('button#btnSendEmail').click(function () {
-                //         sendBody();
-                //     });
-
                 //  $("#btnSubmitSendEmail").on("click", function () {
                 function submitSendEmail() {
                     $.ajax({
@@ -927,6 +924,10 @@
                         inputToDate: {
                             required: true
 
+                        },
+                        inputEmailAddress: {
+                            required: true
+
                         }
 
                     },
@@ -936,6 +937,10 @@
                         },
                         inputToDate: {
                             equalTo: "Date is Mandatory"
+                        },
+                        inputEmailAddress: {
+                            equalTo: "Email Address is Mandatory"
+
                         }
                     },
                     highlight: function (element) {
@@ -949,7 +954,115 @@
                     }
                 });
 
+                $.ajax({
+                    type: "POST",
+                    url: "../dashboard?action=listDistinctLanguages",
+                    dataType: 'json'
+                })
+                        .done(function (data, textStatus, jqXHR) {
+                            var response = data;
+                            if (response.result === "error") {
+                                ajaxHandleError(response);
+                            } else {
+                                languages = data.data;
+                                loadAddBtnLanguage();
+                                loadEditBtnLanguage();
+                                loadSendEmailBtnLanguage();
+                            }
+                        })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+                            var respJson = JSON.parse(jqXHR.responseText);
+                            var response = jQuery.parseJSON(respJson);
+                            $.alert(response.errorMsg, "Error !!");
+                        });
 
+                function loadSendEmailBtnLanguage() {
+                    selectLanguage.select2({
+                        data: languages,
+                        placeholder: "Select Language",
+                        //  minimumResultsForSearch: "Infinity",
+                        allowClear: true,
+//                        escapeMarkup: function (markup) {
+//                            return markup; // let our custom formatter work
+//                        },
+//                        templateResult: function (repo) {
+//                            if (repo.loading)
+//                                return repo.text;
+//                            return repo.language;
+//                        },
+//                        templateSelection: function (repo) {
+//                            return repo.language || repo.text;
+//                        }
+                    }).on("change", function (e) {
+                        if (typeof this.value !== "undefined"
+                                && this.value !== '') {
+                            //  selectedProject = this.value;
+                            //  reloadTable();
+                        } else {
+
+                        }
+                    });
+                    selectLanguage.val("").trigger("change");
+                }
+
+                function loadAddBtnLanguage() {
+                    inputLanguage.select2({
+                        tags: true,
+                        data: languages,
+                        placeholder: "Select Language",
+//                        minimumResultsForSearch: "Infinity",
+                        allowClear: true,
+//                        escapeMarkup: function (markup) {
+//                            return markup; // let our custom formatter work
+//                        },
+//                        templateResult: function (repo) {
+//                            if (repo.loading)
+//                                return repo.text;
+//                            return repo.language;
+//                        },
+//                        templateSelection: function (repo) {
+//                            return repo.language || repo.text;
+//                        }
+                    }).on("change", function (e) {
+                        if (typeof this.value !== "undefined"
+                                && this.value !== '') {
+                            //  selectedProject = this.value;
+                            //  reloadTable();
+                        } else {
+
+                        }
+                    });
+                    inputLanguage.val("").trigger("change");
+                }
+                function loadEditBtnLanguage() {
+                    inputLang.select2({
+                        tags: true,
+                        data: languages,
+                        placeholder: "Select Language",
+//                        minimumResultsForSearch: "Infinity",
+                        allowClear: true,
+//                        escapeMarkup: function (markup) {
+//                            return markup; // let our custom formatter work
+//                        },
+//                        templateResult: function (repo) {
+//                            if (repo.loading)
+//                                return repo.text;
+//                            return repo.language;
+//                        },
+//                        templateSelection: function (repo) {
+//                            return repo.language || repo.text;
+//                        }
+                    }).on("change", function (e) {
+                        if (typeof this.value !== "undefined"
+                                && this.value !== '') {
+                            //  selectedProject = this.value;
+                            //  reloadTable();
+                        } else {
+
+                        }
+                    });
+                    inputLang.val("").trigger("change");
+                }
 
 
             });

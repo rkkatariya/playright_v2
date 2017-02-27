@@ -696,6 +696,24 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
     }
 
     @Override
+    public List<String> getDistinctLanguage()
+            throws SQLException {
+        logger.debug("getDistinctLanguage::START::");
+        List<String> datas = new ArrayList<>();
+        PreparedStatement ps;
+        ps = conn.prepareStatement("SELECT distinct ad.language FROM analytics_data ad");
+        // ps.setInt(1, customer);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            datas.add(rs.getString("language"));
+        }
+        close(rs);
+        close(ps);
+        logger.debug("getDistinctLanguage::END");
+        return datas;
+    }   
+
+    @Override
     public Integer createData(Data data)
             throws SQLException {
         logger.debug("createData::START::");
@@ -704,7 +722,7 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
                 + "headline, edition, supplement, \n"
                 + "source, page_no, \n"
                 + "height, width, total_article_size, \n"
-                + "circulation_figure, quantitative_AVE, journalist_factor, \n"
+                + "circulation_figure, customer, journalist_factor, \n"
                 + "image, image_exists, file_size, file_type,\n"
                 + " created_by, last_updated_by, image_filename) \n"
                 + "VALUES (?, ?, ?, \n"
@@ -726,16 +744,30 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         ps.setInt(10, data.getWidth());
         ps.setInt(11, data.getTotalArticleSize());
         ps.setInt(12, data.getCirculationFigure());
-        ps.setInt(13, data.getQuantitativeAVE());
+        ps.setString(13, data.getCustomer());
         ps.setInt(14, data.getJournalistFactor());
         ps.setBlob(15, data.getImage());
         ps.setString(16, data.getImageExists());
-        ps.setInt(17, data.getFileSize());
-        ps.setString(18, data.getFileType());
+        if (data.getFileSize() != null) {
+            ps.setInt(17, data.getFileSize());
+        } else {
+            ps.setNull(17, Types.INTEGER);
+        }
+        if (data.getFileType() != null) {
+            ps.setString(18, data.getFileType());
+        } else {
+            ps.setNull(18, Types.VARCHAR);
+        }
+        // ps.setInt(17, data.getFileSize());
+        // ps.setString(18, data.getFileType());
         ps.setInt(19, data.getCreatedBy());
         ps.setInt(20, data.getLastUpdatedBy());
-        ps.setString(21, data.getImageFileName());
-
+        if (data.getFileType() != null) {
+            ps.setString(21, data.getImageFileName());
+        } else {
+            ps.setNull(21, Types.VARCHAR);
+        }
+        //   ps.setString(21, data.getImageFileName());
         ps.executeUpdate();
         Integer id = getLastInsertId();
         if (id > 0) {
@@ -765,7 +797,7 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
                 + "width = ?,\n"
                 + "total_article_size = ?,\n"
                 + "circulation_figure = ?,\n"
-                + "quantitative_AVE = ?,\n"
+                + "customer = ?,\n"
                 + "journalist_factor = ?,\n"
                 //  + "image = ?,\n"
                 + "image_exists = ?,\n"
@@ -786,7 +818,7 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         ps.setInt(10, data.getWidth());
         ps.setInt(11, data.getTotalArticleSize());
         ps.setInt(12, data.getCirculationFigure());
-        ps.setInt(13, data.getQuantitativeAVE());
+        ps.setString(13, data.getCustomer());
         ps.setInt(14, data.getJournalistFactor());
         //  ps.setBlob(15, data.getImage());
         ps.setString(15, data.getImageExists());
@@ -849,7 +881,7 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
     @Override
     public List<Data> getDataForEmail(String inputFrom,
             String inputTo, String inputLanguage, String inputEdition,
-            String inputSource, String inputNewsPaper)
+            String inputSource, String inputNewsPaper, String inputCustomer, String inputImageExist)
             throws SQLException {
         logger.debug("getDataForEmail::START::");
         List<Data> datas = new ArrayList<>();
@@ -858,19 +890,25 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         String selectDate = "select ad.* from analytics_data ad \n"
                 + "where ad.news_date between '" + inputFrom + "' and '" + inputTo + "' \n";
         String language = !"".equals(inputLanguage)
-                ? "and ad.language = '" + inputLanguage + "'\n" : "and lower(ad.language) = 'english'\n";
+                ? "and ad.language = '" + inputLanguage + "'\n" : "";
         String edition = !"".equals(inputEdition)
                 ? "and ad.edition = '" + inputEdition + "'\n" : "";
         String source = !"".equals(inputSource)
                 ? "and ad.source = '" + inputSource + "' \n" : "";
         String newsPaper = !"".equals(inputNewsPaper)
                 ? "and ad.news_paper = '" + inputNewsPaper + "'\n" : "";
+        String customer = !"".equals(inputCustomer)
+                ? "and ad.customer = '" + inputCustomer + "'\n" : "";
+        String image = !"".equals(inputImageExist)
+                ? "and ad.image_exists = '" + inputImageExist + "'\n" : "";
         String order = "order by date(ad.news_date) desc";
 
-        String query = (selectDate + language + edition
-                + source + newsPaper + order);
+        String query = (selectDate + image + edition
+                + source + newsPaper + customer + language);
 
-        ps = conn.prepareStatement(query);
+        
+        String q1 = query + "and ad.image_filename is null \n" + order;
+        ps = conn.prepareStatement(q1);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             Data d = getDataObj(rs);
@@ -878,14 +916,19 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         }
         close(rs);
         close(ps);
+        
+        
+//        if ("".equals(inputImageExist) && "".equals(inputLanguage)) {
+        String q2 = query + "and ad.image_filename is not null \n" + 
+                    "and lower(ad.language) = 'english' \n" + order;
 
-        if ("".equals(inputLanguage)) {
-            language = "and lower(ad.language) != 'english' \n";
+//            language = "and lower(ad.language) = 'english' \n"
+//                    + "and ad.image_exists != 'N'\n";
+//
+//            query = (selectDate + language + edition
+//                    + source + newsPaper + customer + order);
 
-            query = (selectDate + language + edition
-                    + source + newsPaper + order);
-
-            ps = conn.prepareStatement(query);
+            ps = conn.prepareStatement(q2);
             rs = ps.executeQuery();
             while (rs.next()) {
                 Data d = getDataObj(rs);
@@ -895,7 +938,28 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
             close(rs);
             close(ps);
 
-        }
+//        }
+
+//        if ("".equals(inputImageExist) && "".equals(inputLanguage)) {
+//            language = "and lower(ad.language) != 'english' \n"
+//                    + "and ad.image_exists != 'N'\n";
+        String q3 = query + "and ad.image_filename is not null \n" + 
+                    "and lower(ad.language) != 'english' \n" + order;
+
+//            query = (selectDate + language + edition
+//                    + source + newsPaper + customer + order);
+
+            ps = conn.prepareStatement(q3);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Data d = getDataObj(rs);
+                datas.add(d);
+            }
+
+            close(rs);
+            close(ps);
+
+//        }
 
         logger.debug("getDataForEmail::END");
         return datas;

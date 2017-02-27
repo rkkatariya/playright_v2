@@ -28,7 +28,7 @@ public class Data {
     private Integer width;
     private Integer totalArticleSize;
     private Integer circulationFigure;
-    private Integer quantitativeAVE;
+    private String customer;
     private Integer journalistFactor;
     private Blob image;
     private String imageExists;      
@@ -231,19 +231,7 @@ public class Data {
         this.circulationFigure = circulationFigure;
     }
 
-    /**
-     * @return the quantitativeAVE
-     */
-    public Integer getQuantitativeAVE() {
-        return quantitativeAVE;
-    }
-
-    /**
-     * @param quantitativeAVE the quantitativeAVE to set
-     */
-    public void setQuantitativeAVE(Integer quantitativeAVE) {
-        this.quantitativeAVE = quantitativeAVE;
-    }
+   
 
     /**
      * @return the journalistFactor
@@ -371,6 +359,20 @@ public class Data {
      */
     public void setLastUpdatedBy(Integer lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    /**
+     * @return the customer
+     */
+    public String getCustomer() {
+        return customer;
+    }
+
+    /**
+     * @param customer the customer to set
+     */
+    public void setCustomer(String customer) {
+        this.customer = customer;
     }
 
   

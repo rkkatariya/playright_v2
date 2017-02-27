@@ -261,7 +261,7 @@ public class DaoHelper {
         data.setWidth(rs.getInt("width"));
         data.setLanguage(rs.getString("language"));
         data.setPageNo(rs.getInt("page_no"));
-        data.setQuantitativeAVE(rs.getInt("quantitative_AVE"));
+        data.setCustomer(rs.getString("customer"));
         data.setSource(rs.getString("source"));
         data.setSupplement(rs.getString("supplement"));
         data.setTotalArticleSize(rs.getInt("total_article_size"));

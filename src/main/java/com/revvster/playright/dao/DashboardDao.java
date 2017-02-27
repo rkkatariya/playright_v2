@@ -65,6 +65,9 @@ public interface DashboardDao {
 
     public List<Data> getDataByContext(User loggedInUser) throws SQLException;
     
+    public List<String> getDistinctLanguage()
+            throws SQLException;    
+   
     public void deleteData(Integer id) throws SQLException;
     
     public BarChartData getLanguageVsArticles(Timestamp inptFrom,Timestamp inptTo) throws SQLException;
@@ -93,7 +96,7 @@ public interface DashboardDao {
     
     public List<Data> getDataForEmail(String inputFrom,
             String inputTo, String inputLanguage, String inputEdition,
-            String inputSource, String inputNewsPaper)
+            String inputSource, String inputNewsPaper, String inputCustomer, String inputImageExist)
             throws SQLException;
 
 }
