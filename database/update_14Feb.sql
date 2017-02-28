@@ -10,3 +10,6 @@
 
 ALTER TABLE `sb_email_log` 
 CHANGE COLUMN `body` `body` MEDIUMTEXT NULL DEFAULT NULL ;
+
+ALTER TABLE `analytics_data`
+CHANGE COLUMN `quantitative_AVE` `customer` VARCHAR(45) NULL ;
