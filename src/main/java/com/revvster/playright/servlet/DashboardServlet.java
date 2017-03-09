@@ -300,7 +300,7 @@ public class DashboardServlet extends HttpServlet {
                         List<String> languages = dashboardDao.getDistinctLanguage();
                         jsonArray = gson.toJson(languages);
                         jsonArray = "{\n\"data\":\n" + jsonArray + "\n}";
-                        break;                   
+                        break;
                     case "getPhoto":
                         imageId = Integer.valueOf(request.getParameter("imageId"));
                         data = dashboardDao.getPhoto(imageId);
@@ -743,6 +743,7 @@ public class DashboardServlet extends HttpServlet {
         String contentType = "";
         Integer size = 0;
         Part filePart = null;
+        boolean create = true;
         if (request.getParameter("inputId") != null) {
             data.setId(Integer.valueOf(request.getParameter("inputId")));
         }
@@ -753,20 +754,49 @@ public class DashboardServlet extends HttpServlet {
         } else {
             data.setNewsDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
         }
-        data.setNewsPaper(request.getParameter("inputNewsPaper"));
+        data.setNewsPaper(request.getParameter("inputNewsPaper"));         
         data.setLanguage(request.getParameter("inputLanguage"));
         data.setHeadline(request.getParameter("inputHeadline"));
         data.setEdition(request.getParameter("inputEdition"));
         data.setSupplement(request.getParameter("inputSupplement"));
         data.setSource(request.getParameter("inputSource"));
-        data.setImageExists(request.getParameter("inputImageExists"));
-        data.setPageNo(Integer.valueOf(request.getParameter("inputPageNo")));
-        data.setHeight(Integer.valueOf(request.getParameter("inputHeight")));
-        data.setWidth(Integer.valueOf(request.getParameter("inputWidth")));
-        data.setTotalArticleSize(Integer.valueOf(request.getParameter("inputTotalArticleSize")));
-        data.setCirculationFigure(Integer.valueOf(request.getParameter("inputCirculationFigure")));
+        if (request.getParameter("inputImageExists") != null) {
+            data.setImageExists(request.getParameter("inputImageExists"));
+        }        
+        if ("".equals(request.getParameter("inputPageNo"))) {
+            create = false;
+        } else {
+            data.setPageNo(Integer.valueOf(request.getParameter("inputPageNo")));
+        }
+        if ("".equals(request.getParameter("inputHeight"))) {
+            create = false;
+        } else {
+            data.setHeight(Integer.valueOf(request.getParameter("inputHeight")));
+        }
+        if ("".equals(request.getParameter("inputWidth"))) {
+            create = false;
+        } else {
+            data.setWidth(Integer.valueOf(request.getParameter("inputWidth")));
+        }
+
+        if ("".equals(request.getParameter("inputTotalArticleSize"))) {
+            create = false;
+        } else {
+            data.setTotalArticleSize(Integer.valueOf(request.getParameter("inputTotalArticleSize")));
+        }
+
+        if ("".equals(request.getParameter("inputCirculationFigure"))) {
+            create = false;
+        } else {
+            data.setCirculationFigure(Integer.valueOf(request.getParameter("inputCirculationFigure")));
+        }
+
         data.setCustomer(request.getParameter("inputCustomer"));
-        data.setJournalistFactor(Integer.valueOf(request.getParameter("inputJournalistFactor")));
+        if ("".equals(request.getParameter("inputJournalistFactor"))) {
+            create = false;
+        } else {
+            data.setJournalistFactor(Integer.valueOf(request.getParameter("inputJournalistFactor")));
+        }
 
         try {
             if (request.getPart("inputImage") != null) {

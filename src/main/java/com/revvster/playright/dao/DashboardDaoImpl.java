@@ -701,7 +701,8 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         logger.debug("getDistinctLanguage::START::");
         List<String> datas = new ArrayList<>();
         PreparedStatement ps;
-        ps = conn.prepareStatement("SELECT distinct ad.language FROM analytics_data ad");
+        ps = conn.prepareStatement("SELECT distinct ad.language FROM analytics_data ad \n"
+                + "where ad.language is not null");
         // ps.setInt(1, customer);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -711,7 +712,7 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         close(ps);
         logger.debug("getDistinctLanguage::END");
         return datas;
-    }   
+    }
 
     @Override
     public Integer createData(Data data)
@@ -739,15 +740,43 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         ps.setString(5, data.getEdition());
         ps.setString(6, data.getSupplement());
         ps.setString(7, data.getSource());
-        ps.setInt(8, data.getPageNo());
-        ps.setInt(9, data.getHeight());
-        ps.setInt(10, data.getWidth());
-        ps.setInt(11, data.getTotalArticleSize());
-        ps.setInt(12, data.getCirculationFigure());
+        if (data.getPageNo() != null) {
+            ps.setInt(8, data.getPageNo());
+        } else {
+            ps.setNull(8, Types.INTEGER);
+        }
+        if (data.getHeight() != null) {
+            ps.setInt(9, data.getHeight());
+        } else {
+            ps.setNull(9, Types.INTEGER);
+        }
+        if (data.getWidth() != null) {
+            ps.setInt(10, data.getWidth());
+        } else {
+            ps.setNull(10, Types.INTEGER);
+        }
+        if (data.getTotalArticleSize() != null) {
+            ps.setInt(11, data.getTotalArticleSize());
+        } else {
+            ps.setNull(11, Types.INTEGER);
+        }
+        if (data.getCirculationFigure() != null) {
+            ps.setInt(12, data.getCirculationFigure());
+        } else {
+            ps.setNull(12, Types.INTEGER);
+        }
         ps.setString(13, data.getCustomer());
-        ps.setInt(14, data.getJournalistFactor());
+        if (data.getJournalistFactor() != null) {
+            ps.setInt(14, data.getJournalistFactor());
+        } else {
+            ps.setNull(14, Types.INTEGER);
+        }
         ps.setBlob(15, data.getImage());
-        ps.setString(16, data.getImageExists());
+        if (data.getImageExists() != null) {
+            ps.setString(16, data.getImageExists());
+        } else {
+            ps.setNull(16, Types.VARCHAR);
+        }
         if (data.getFileSize() != null) {
             ps.setInt(17, data.getFileSize());
         } else {
@@ -758,8 +787,6 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         } else {
             ps.setNull(18, Types.VARCHAR);
         }
-        // ps.setInt(17, data.getFileSize());
-        // ps.setString(18, data.getFileType());
         ps.setInt(19, data.getCreatedBy());
         ps.setInt(20, data.getLastUpdatedBy());
         if (data.getFileType() != null) {
@@ -767,7 +794,6 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         } else {
             ps.setNull(21, Types.VARCHAR);
         }
-        //   ps.setString(21, data.getImageFileName());
         ps.executeUpdate();
         Integer id = getLastInsertId();
         if (id > 0) {
@@ -906,7 +932,6 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         String query = (selectDate + image + edition
                 + source + newsPaper + customer + language);
 
-        
         String q1 = query + "and ad.image_filename is null \n" + order;
         ps = conn.prepareStatement(q1);
         ResultSet rs = ps.executeQuery();
@@ -916,51 +941,46 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         }
         close(rs);
         close(ps);
-        
-        
+
 //        if ("".equals(inputImageExist) && "".equals(inputLanguage)) {
-        String q2 = query + "and ad.image_filename is not null \n" + 
-                    "and lower(ad.language) = 'english' \n" + order;
+        String q2 = query + "and ad.image_filename is not null \n"
+                + "and lower(ad.language) = 'english' \n" + order;
 
 //            language = "and lower(ad.language) = 'english' \n"
 //                    + "and ad.image_exists != 'N'\n";
 //
 //            query = (selectDate + language + edition
 //                    + source + newsPaper + customer + order);
+        ps = conn.prepareStatement(q2);
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            Data d = getDataObj(rs);
+            datas.add(d);
+        }
 
-            ps = conn.prepareStatement(q2);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                Data d = getDataObj(rs);
-                datas.add(d);
-            }
-
-            close(rs);
-            close(ps);
+        close(rs);
+        close(ps);
 
 //        }
-
 //        if ("".equals(inputImageExist) && "".equals(inputLanguage)) {
 //            language = "and lower(ad.language) != 'english' \n"
 //                    + "and ad.image_exists != 'N'\n";
-        String q3 = query + "and ad.image_filename is not null \n" + 
-                    "and lower(ad.language) != 'english' \n" + order;
+        String q3 = query + "and ad.image_filename is not null \n"
+                + "and lower(ad.language) != 'english' \n" + order;
 
 //            query = (selectDate + language + edition
 //                    + source + newsPaper + customer + order);
+        ps = conn.prepareStatement(q3);
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            Data d = getDataObj(rs);
+            datas.add(d);
+        }
 
-            ps = conn.prepareStatement(q3);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                Data d = getDataObj(rs);
-                datas.add(d);
-            }
-
-            close(rs);
-            close(ps);
+        close(rs);
+        close(ps);
 
 //        }
-
         logger.debug("getDataForEmail::END");
         return datas;
     }

@@ -682,6 +682,28 @@
                         },
                         {
                             "render": function (data, type, columns) {
+                                if (data === null || data === '' || typeof data === "undefined") {
+                                    return '';
+                                } else {
+                                    return data;
+
+                                }
+                            },
+                            "targets": [2]
+                        },
+                        {
+                            "render": function (data, type, columns) {
+                                if (data === null || data === '' || typeof data === "undefined") {
+                                    return '';
+                                } else {
+                                    return data;
+
+                                }
+                            },
+                            "targets": [7]
+                        },
+                        {
+                            "render": function (data, type, columns) {
                                 //                                console.log(columns["manager"]);
                                 if (columns["fileSize"] === 0) {
                                     return '';
