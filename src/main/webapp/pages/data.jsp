@@ -776,19 +776,38 @@
                     autoclose: true
                 });
 
+//                inputFromDate.datepicker({
+//                    format: "dd-mm-yyyy",
+//                    endDate: "0d",
+//                    todayHighlight: true,
+//                    autoclose: true
+//                });
+//
+//                inputToDate.datepicker({
+//                    format: "dd-mm-yyyy",
+//                    startDate: "-6m",
+//                    endDate: "0d",
+//                    todayHighlight: true,
+//                    autoclose: true
+//                });
+
+                //var _startDate = new Date(); //todays date
+                //  var _endDate = new Date(_startDate.getTime() + (24 * 60 * 60 * 1000)); //plus 1 day
                 inputFromDate.datepicker({
-                    format: "dd-mm-yyyy",
-                    endDate: "0d",
-                    todayHighlight: true,
-                    autoclose: true
+                    format: 'dd-mm-yyyy',
+                    autoclose: true,
+                    //startDate: _startDate,
+                    todayHighlight: true
+                }).on('changeDate', function (e) {
+                    var _endDate = new Date(e.date.getTime() + (24 * 60 * 60 * 1000)); //get new end date
+                    inputToDate.datepicker('setStartDate', _endDate).focus(); //dynamically set new start date for #to
                 });
 
                 inputToDate.datepicker({
-                    format: "dd-mm-yyyy",
-                    startDate: "-6m",
-                    endDate: "0d",
-                    todayHighlight: true,
-                    autoclose: true
+                    format: 'dd-mm-yyyy',
+                    autoclose: true,
+                    startDate: _endDate,
+                    todayHighlight: false
                 });
 
                 function toggleEditDataBtn() {
