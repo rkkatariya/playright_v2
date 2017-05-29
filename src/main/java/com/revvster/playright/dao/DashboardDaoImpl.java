@@ -694,6 +694,27 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         logger.debug("getDataByContext::END");
         return datas;
     }
+    
+    @Override
+    public List<Data> getDataByCustomer(User loggedInUser, String customer)
+            throws SQLException {
+        logger.debug("getDataByCustomer::START::");
+        List<Data> datas = new ArrayList<>();
+        PreparedStatement ps;
+        ps = conn.prepareStatement("select ad.* from analytics_data ad \n"
+                + "where ad.customer = ?\n"
+                + "order by ad.news_date desc");
+         ps.setString(1, customer);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Data d = getDataObj(rs);
+            datas.add(d);
+        }
+        close(rs);
+        close(ps);
+        logger.debug("getDataByCustomer::END");
+        return datas;
+    }
 
     @Override
     public List<String> getDistinctLanguage()
@@ -711,6 +732,27 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
         close(rs);
         close(ps);
         logger.debug("getDistinctLanguage::END");
+        return datas;
+    }
+
+    @Override
+    public List<Data> getDistinctCustomers()
+            throws SQLException {
+        logger.debug("getDistinctCustomers::START::");
+        List<Data> datas = new ArrayList<>();
+        PreparedStatement ps;
+        ps = conn.prepareStatement("SELECT distinct ad.customer , ad.*\n"
+                + "FROM analytics_data ad \n"
+                + "group by ad.customer");
+        // ps.setInt(1, customer);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Data p = getDataObj(rs);
+            datas.add(p);
+        }
+        close(rs);
+        close(ps);
+        logger.debug("getDistinctCustomers::END");
         return datas;
     }
 

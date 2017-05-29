@@ -105,6 +105,7 @@ public class DashboardServlet extends HttpServlet {
             Integer selectedComp = 0;
             Integer selectedProj = 0;
             Integer selectedLoc = 0;
+            String selectedCustomer = "";
             Integer userId = 0;
             String selectedDateRange = "";
             Integer selectedQuestion = 0;
@@ -292,7 +293,8 @@ public class DashboardServlet extends HttpServlet {
                         }
                         break;
                     case "listDataByContext":
-                        datas = dashboardDao.getDataByContext(loggedInUser);
+                        selectedCustomer = request.getParameter("selectedCustomer");
+                        datas = dashboardDao.getDataByCustomer(loggedInUser, selectedCustomer);
                         jsonArray = gson.toJson(datas);
                         jsonArray = "{\n\"data\":\n" + jsonArray + "\n}";
                         break;
@@ -428,6 +430,10 @@ public class DashboardServlet extends HttpServlet {
                             // }
                         }
                         jsonArray = gson.toJson(bcd);
+                        break;
+                    case "listCustomersByContext":
+                        datas = dashboardDao.getDistinctCustomers();
+                        jsonArray = gson.toJson(datas);                       
                         break;
                     case "sendEmail":
                         to = request.getParameter("inputEmailAddress");
@@ -754,7 +760,7 @@ public class DashboardServlet extends HttpServlet {
         } else {
             data.setNewsDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
         }
-        data.setNewsPaper(request.getParameter("inputNewsPaper"));         
+        data.setNewsPaper(request.getParameter("inputNewsPaper"));
         data.setLanguage(request.getParameter("inputLanguage"));
         data.setHeadline(request.getParameter("inputHeadline"));
         data.setEdition(request.getParameter("inputEdition"));
@@ -762,7 +768,7 @@ public class DashboardServlet extends HttpServlet {
         data.setSource(request.getParameter("inputSource"));
         if (request.getParameter("inputImageExists") != null) {
             data.setImageExists(request.getParameter("inputImageExists"));
-        }        
+        }
         if ("".equals(request.getParameter("inputPageNo"))) {
             create = false;
         } else {

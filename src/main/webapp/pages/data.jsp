@@ -217,7 +217,7 @@
                                 <div class="col-sm-3">                            
                                 </div>
                                 <div class="col-sm-3"> 
-                                    <button type="button" class="btn btn-primary pull-right" id="submitCreateData">Submit</button>
+                                    <button type="submit" class="btn btn-primary pull-right" id="submitCreateData">Submit</button>
                                 </div>
                                 <div class="col-sm-3">    
                                     <button type="reset" class="btn btn-link" id="resetCreateData">Reset</button>
@@ -518,12 +518,12 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Data
+
                         <!--<small>Optional description</small>-->
                     </h1>
                 </section>
                 <!-- Main content -->
-                <section class="content">                
+                <section class="content">  
 
                     <div class="row">
                         <div class="col-sm-12">
@@ -535,6 +535,10 @@
                                     <%if (null != user.getCompany() && user.getCompany() > 0) {%>
                                     <button type="button" id="btnSendEmail" class="btn btn-primary" data-toggle="modal" data-target="#modalSendEmail">Email Data</button>
                                     <%}%>
+                                    <div class="col-sm-3">
+                                        <select id="selectCustomer" name="selectCustomer" class="form-control" style="width: 100%;" >
+                                        </select>
+                                    </div> 
                                 </div>
                                 <div class="box-body">
                                     <table id="list_data" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
@@ -621,14 +625,77 @@
             var selectedData = 0;
             var thehtml = "";
             var tableData;
+            var selectedCustomer = "";
+            var selectCustomer = $("#selectCustomer");
             var inputFromDate = $("#inputFromDate");
             var inputToDate = $("#inputToDate");
             var inputNewsDate = $("#inputNewsDate");
             var sendEmail = $('form#sendEmail');
+            var createData = $('form#createData');
             var selectLanguage = $("#selectLanguage");
             var inputLanguage = $("#inputLanguage");
             var inputLang = $("#inputLang");
-            $(function () {
+            //      $(function () {                
+            $.ajax({
+                type: "GET",
+                url: '../dashboard?action=listCustomersByContext',
+                dataType: 'json'
+            })
+                    .done(function (data, textStatus, jqXHR) {
+                        var response = data;
+                        //console.log(data);
+                        if (response.result === "error") {
+                            ajaxHandleError(response);
+                        } else {
+                            customersData = data;
+                            loadCustomers();
+                        }
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        var respJson = JSON.parse(jqXHR.responseText);
+                        var response = jQuery.parseJSON(respJson);
+                        $.alert(response.errorMsg, "Error !!");
+                    });
+
+            function loadCustomers() {
+                selectCustomer.select2({
+                    data: customersData,
+                    placeholder: "Select Customer",
+                    minimumResultsForSearch: "Infinity",
+                    allowClear: true,
+                    escapeMarkup: function (markup) {
+                        return markup; // let our custom formatter work
+                    },
+                    templateResult: function (repo) {
+                        if (repo.loading)
+                            return repo.text;
+                        return repo.customer;
+                    },
+                    templateSelection: function (repo) {
+                        return repo.customer || repo.text;
+                    }
+                }).on("change", function (e) {
+                    if (typeof this.value !== "undefined"
+                            && this.value !== '') {
+                        selectedCustomer = $("#selectCustomer").select2('data')[0]["customer"];
+                     //   console.log(selectedCustomer);
+                        table.ajax.reload(false);
+                        // loadTableData();                       
+                    } else {
+                        if (selectedCustomer !== "") {
+                            selectedCustomer = null;
+
+                        }
+
+                    }
+
+                });
+                loadTableData();
+                selectCustomer.val("").trigger("change");
+
+            }
+
+            function loadTableData() {
                 table = $('#list_data').DataTable({
                     "paging": true,
                     "responsive": true,
@@ -644,9 +711,12 @@
                         'excelHtml5'
                     ],
                     "ajax": {
-                        "url": "../dashboard?action=listDataByContext",
+                        "url": '../dashboard?action=listDataByContext',
                         "type": "POST",
                         "dataType": 'json',
+                        "data": function (d) {
+                            d.selectedCustomer = selectedCustomer;
+                        }
                     },
                     "columns": [
                         {"data": "newsDate"},
@@ -716,7 +786,6 @@
                     ]
 
                 });
-
                 $('#list_data tbody').on('click', 'tr', function () {
                     var data = table.row(this).data();
                     if ($(this).hasClass('active')) {
@@ -750,31 +819,32 @@
                         }
                     });
                 });
+            }
 
-                $("#resetCreateData").click(function () {
-                    // createUserForm.validate().resetForm();
-                    $('form#createData .form-group').removeClass('has-error has-feedback has-success');
-                    //                cInputManager.select2("val", "");
-                    //                cInputManager.empty();
-                    //                cInputCompany.select2("val", "");
-                    //                cInputCompany.empty();
-                    //                cInputManager.prop("disabled", true);
-                    //                cInputCompany.prop("disabled", true);
-                });
+            $("#resetCreateData").click(function () {
+                // createUserForm.validate().resetForm();
+                $('form#createData .form-group').removeClass('has-error has-feedback has-success');
+                //                cInputManager.select2("val", "");
+                //                cInputManager.empty();
+                //                cInputCompany.select2("val", "");
+                //                cInputCompany.empty();
+                //                cInputManager.prop("disabled", true);
+                //                cInputCompany.prop("disabled", true);
+            });
 
-                $("form#createData #inputNewsDate").datepicker({
-                    format: "dd-mm-yyyy",
-                    endDate: "0d",
-                    todayHighlight: true,
-                    autoclose: true
-                });
+            $("form#createData #inputNewsDate").datepicker({
+                format: "dd-mm-yyyy",
+                endDate: "0d",
+                todayHighlight: true,
+                autoclose: true
+            });
 
-                $("form#editData #inputNewsDate").datepicker({
-                    format: "dd-mm-yyyy",
-                    endDate: "0d",
-                    todayHighlight: true,
-                    autoclose: true
-                });
+            $("form#editData #inputNewsDate").datepicker({
+                format: "dd-mm-yyyy",
+                endDate: "0d",
+                todayHighlight: true,
+                autoclose: true
+            });
 
 //                inputFromDate.datepicker({
 //                    format: "dd-mm-yyyy",
@@ -791,213 +861,75 @@
 //                    autoclose: true
 //                });
 
-                var _startDate = new Date(); //todays date
-                var _endDate = new Date(_startDate.getTime() + (24 * 60 * 60 * 1000)); //plus 1 day
-                inputFromDate.datepicker({
-                    format: 'dd-mm-yyyy',
-                    autoclose: true,
-                    //startDate: _startDate,
-                    todayHighlight: true
-                }).on('changeDate', function (e) {
-                    _endDate = new Date(e.date.getTime() + (24 * 60 * 60 * 1000)); //get new end date
-                    inputToDate.datepicker('setStartDate', _endDate).focus(); //dynamically set new start date for #to
-                });
+            var _startDate = new Date(); //todays date
+            var _endDate = new Date(_startDate.getTime() + (24 * 60 * 60 * 1000)); //plus 1 day
+            inputFromDate.datepicker({
+                format: 'dd-mm-yyyy',
+                autoclose: true,
+                //startDate: _startDate,
+                todayHighlight: true
+            }).on('changeDate', function (e) {
+                _endDate = new Date(e.date.getTime() + (24 * 60 * 60 * 1000)); //get new end date
+                inputToDate.datepicker('setStartDate', _endDate).focus(); //dynamically set new start date for #to
+            });
 
-                inputToDate.datepicker({
-                    format: 'dd-mm-yyyy',
-                    autoclose: true,
-                    startDate: _endDate,
-                    todayHighlight: false
-                });
+            inputToDate.datepicker({
+                format: 'dd-mm-yyyy',
+                autoclose: true,
+                startDate: _endDate,
+                todayHighlight: false
+            });
 
-                function toggleEditDataBtn() {
-                    if (table.rows('.active').data().length === 1) {
-                        $('#btnEditData').prop('disabled', false);
-                    } else {
-                        $('#btnEditData').prop('disabled', true);
-                    }
+            function toggleEditDataBtn() {
+                if (table.rows('.active').data().length === 1) {
+                    $('#btnEditData').prop('disabled', false);
+                } else {
+                    $('#btnEditData').prop('disabled', true);
                 }
+            }
 
-                function toggleDisableDataBtn() {
-                    if (table.rows('.active').data().length === 1) {
-                        $('#btnDisableData').prop('disabled', false);
-                    } else {
-                        $('#btnDisableData').prop('disabled', true);
-                    }
+            function toggleDisableDataBtn() {
+                if (table.rows('.active').data().length === 1) {
+                    $('#btnDisableData').prop('disabled', false);
+                } else {
+                    $('#btnDisableData').prop('disabled', true);
                 }
-                $('button#btnEditData').click(function () {
-                    var data = table.row('.active').data();
-                    // console.log(data["imageExists"]);
-                    $("form#editData :input[id=inputId]").val(data["id"]);
-                    $("form#editData :input[id=inputNewsDate]").val(convertDate(data["newsDate"]));
-                    $("form#editData :input[id=inputNewsPaper]").val(data["newsPaper"]);
-                    $("form#editData :input[id=inputLang]").val(data["language"]);
-                    $("form#editData :input[id=inputHeadline]").val(data["headline"]);
-                    $("form#editData :input[id=inputEdition]").val(data["edition"]);
-                    $("form#editData :input[id=inputSupplement]").val(data["supplement"]);
-                    $("form#editData :input[id=inputSource]").val(data["source"]);
-                    // $("form#editData :input[id=inputImageExists]").val(data["imageExists"]);
-                    $('form#editData :input:radio[name=inputImageExists]').filter('[value=' + data["imageExists"] + ']').prop('checked', true);
-                    $("form#editData :input[id=inputPageNo]").val(data["pageNo"]);
-                    $("form#editData :input[id=inputHeight]").val(data["height"]);
-                    $("form#editData :input[id=inputWidth]").val(data["width"]);
-                    $("form#editData :input[id=inputTotalArticleSize]").val(data["totalArticleSize"]);
-                    $("form#editData :input[id=inputCirculationFigure]").val(data["circulationFigure"]);
-                    $("form#editData :input[id=inputJournalistFactor]").val(data["journalistFactor"]);
-                    $("form#editData :input[id=inputCustomer]").val(data["customer"]);
-                    $("form#editData :input[id=inputImage]").val(data["image"]);
-                    $("form#editData :input[id=inputFileSize]").val(data["fileSize"]);
-                    $("form#editData :input[id=inputFileType]").val(data["fileType"]);
-                    //  console.log(data["language"]);
-                });
+            }
+            $('button#btnEditData').click(function () {
+                var data = table.row('.active').data();
+                // console.log(data["imageExists"]);
+                $("form#editData :input[id=inputId]").val(data["id"]);
+                $("form#editData :input[id=inputNewsDate]").val(convertDate(data["newsDate"]));
+                $("form#editData :input[id=inputNewsPaper]").val(data["newsPaper"]);
+                $("form#editData :input[id=inputLang]").val(data["language"]);
+                $("form#editData :input[id=inputHeadline]").val(data["headline"]);
+                $("form#editData :input[id=inputEdition]").val(data["edition"]);
+                $("form#editData :input[id=inputSupplement]").val(data["supplement"]);
+                $("form#editData :input[id=inputSource]").val(data["source"]);
+                // $("form#editData :input[id=inputImageExists]").val(data["imageExists"]);
+                $('form#editData :input:radio[name=inputImageExists]').filter('[value=' + data["imageExists"] + ']').prop('checked', true);
+                $("form#editData :input[id=inputPageNo]").val(data["pageNo"]);
+                $("form#editData :input[id=inputHeight]").val(data["height"]);
+                $("form#editData :input[id=inputWidth]").val(data["width"]);
+                $("form#editData :input[id=inputTotalArticleSize]").val(data["totalArticleSize"]);
+                $("form#editData :input[id=inputCirculationFigure]").val(data["circulationFigure"]);
+                $("form#editData :input[id=inputJournalistFactor]").val(data["journalistFactor"]);
+                $("form#editData :input[id=inputCustomer]").val(data["customer"]);
+                $("form#editData :input[id=inputImage]").val(data["image"]);
+                $("form#editData :input[id=inputFileSize]").val(data["fileSize"]);
+                $("form#editData :input[id=inputFileType]").val(data["fileType"]);
+                //  console.log(data["language"]);
+            });
 
-                $("#submitCreateData").on("click", function () {
-                    $.ajax({
-                        type: "POST",
-                        url: "../dashboard?action=createAnalyticsData",
-                        //            data: $('form#createUser').serialize(),
-                        data: new FormData($('form#createData')[0]),
-                        contentType: false,
-                        processData: false,
-                        dataType: 'json'
-                    })
-                            .done(function (data, textStatus, jqXHR) {
-                                var response = data;
-                                if (response.result === "error") {
-                                    ajaxHandleError(response);
-                                } else {
-                                    ajaxHandleSuccess(response);
-                                    $("#modalCreateData").modal('hide');
-                                    table.ajax.reload();
-                                }
-                            })
-                            .fail(function (jqXHR, textStatus, errorThrown) {
-                                var respJson = JSON.parse(jqXHR.responseText);
-                                var response = jQuery.parseJSON(respJson);
-                                $.alert(response.errorMsg, "Error !!");
-                            });
-                });
-
-                $("#submitEditData").on("click", function () {
-                    $.ajax({
-                        type: "POST",
-                        url: "../dashboard?action=updateAnalyticsData",
-                        data: new FormData($('form#editData')[0]),
-                        contentType: false,
-                        processData: false,
-                        dataType: 'json'
-                    })
-                            .done(function (data, textStatus, jqXHR) {
-                                var response = data;
-                                if (response.result === "error") {
-                                    ajaxHandleError(response);
-                                } else {
-                                    ajaxHandleSuccess(response);
-                                    $("#modalEditData").modal('hide');
-                                    table.ajax.reload();
-                                }
-                            })
-                            .fail(function (jqXHR, textStatus, errorThrown) {
-                                var respJson = JSON.parse(jqXHR.responseText);
-                                var response = jQuery.parseJSON(respJson);
-                                $.alert(response.errorMsg, "Error !!");
-                            });
-                });
-
-                $("#submitDisableData").on("click", function () {
-                    $.ajax({
-                        type: "POST",
-                        url: "../dashboard?action=disableData",
-                        data: $("form#disableData").serialize(),
-                        dataType: 'json'
-                    })
-                            .done(function (data, textStatus, jqXHR) {
-                                var response = data;
-                                if (response.result === "error") {
-                                    ajaxHandleError(response);
-                                } else {
-                                    ajaxHandleSuccess(response);
-                                    $("#modalDisableData").modal('hide');
-                                    table.ajax.reload();
-                                }
-                            })
-                            .fail(function (jqXHR, textStatus, errorThrown) {
-                                var respJson = JSON.parse(jqXHR.responseText);
-                                var response = jQuery.parseJSON(respJson);
-                                $.alert(response.errorMsg, "Error !!");
-                            });
-                });
-
-                //  $("#btnSubmitSendEmail").on("click", function () {
-                function submitSendEmail() {
-                    $.ajax({
-                        type: "POST",
-                        url: "../dashboard?action=sendEmail",
-                        data: $("form#sendEmail").serialize(),
-                        dataType: 'json'
-                    })
-                            .done(function (data, textStatus, jqXHR) {
-                                var response = data;
-                                if (response.result === "error") {
-                                    ajaxHandleError(response);
-                                } else {
-                                    ajaxHandleSuccess(response);
-                                    $("#modalSendEmail").modal('hide');
-                                    table.ajax.reload();
-                                }
-                            })
-                            .fail(function (jqXHR, textStatus, errorThrown) {
-                                var respJson = JSON.parse(jqXHR.responseText);
-                                var response = jQuery.parseJSON(respJson);
-                                $.alert(response.errorMsg, "Error !!");
-                            });
-                }
-                //  });
-
-                var sendEmaill = sendEmail.validate({
-                    //        debug: true,
-                    focusCleanup: true,
-                    rules: {
-                        inputFromDate: {
-                            required: true
-
-                        },
-                        inputToDate: {
-                            required: true
-
-                        },
-                        inputEmailAddress: {
-                            required: true
-
-                        }
-
-                    },
-                    messages: {
-                        inputFromDate: {
-                            equalTo: "Date is Mandatory"
-                        },
-                        inputToDate: {
-                            equalTo: "Date is Mandatory"
-                        },
-                        inputEmailAddress: {
-                            equalTo: "Email Address is Mandatory"
-
-                        }
-                    },
-                    highlight: function (element) {
-                        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-                    },
-                    success: function (element) {
-                        $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-                    },
-                    submitHandler: function (form) {
-                        submitSendEmail();
-                    }
-                });
-
+            //   $("#submitCreateData").on("click", function () {
+            function submitCreateData() {
                 $.ajax({
                     type: "POST",
-                    url: "../dashboard?action=listDistinctLanguages",
+                    url: "../dashboard?action=createAnalyticsData",
+                    //            data: $('form#createUser').serialize(),
+                    data: new FormData($('form#createData')[0]),
+                    contentType: false,
+                    processData: false,
                     dataType: 'json'
                 })
                         .done(function (data, textStatus, jqXHR) {
@@ -1005,10 +937,9 @@
                             if (response.result === "error") {
                                 ajaxHandleError(response);
                             } else {
-                                languages = data.data;
-                                loadAddBtnLanguage();
-                                loadEditBtnLanguage();
-                                loadSendEmailBtnLanguage();
+                                ajaxHandleSuccess(response);
+                                $("#modalCreateData").modal('hide');
+                                table.ajax.reload();
                             }
                         })
                         .fail(function (jqXHR, textStatus, errorThrown) {
@@ -1016,97 +947,260 @@
                             var response = jQuery.parseJSON(respJson);
                             $.alert(response.errorMsg, "Error !!");
                         });
+                //  });
+            }
 
-                function loadSendEmailBtnLanguage() {
-                    selectLanguage.select2({
-                        data: languages,
-                        placeholder: "Select Language",
-                        //  minimumResultsForSearch: "Infinity",
-                        allowClear: true,
-//                        escapeMarkup: function (markup) {
-//                            return markup; // let our custom formatter work
-//                        },
-//                        templateResult: function (repo) {
-//                            if (repo.loading)
-//                                return repo.text;
-//                            return repo.language;
-//                        },
-//                        templateSelection: function (repo) {
-//                            return repo.language || repo.text;
-//                        }
-                    }).on("change", function (e) {
-                        if (typeof this.value !== "undefined"
-                                && this.value !== '') {
-                            //  selectedProject = this.value;
-                            //  reloadTable();
-                        } else {
-
-                        }
-                    });
-                    selectLanguage.val("").trigger("change");
-                }
-
-                function loadAddBtnLanguage() {
-                    inputLanguage.select2({
-                        tags: true,
-                        data: languages,
-                        placeholder: "Select Language",
-//                        minimumResultsForSearch: "Infinity",
-                        allowClear: true,
-//                        escapeMarkup: function (markup) {
-//                            return markup; // let our custom formatter work
-//                        },
-//                        templateResult: function (repo) {
-//                            if (repo.loading)
-//                                return repo.text;
-//                            return repo.language;
-//                        },
-//                        templateSelection: function (repo) {
-//                            return repo.language || repo.text;
-//                        }
-                    }).on("change", function (e) {
-                        if (typeof this.value !== "undefined"
-                                && this.value !== '') {
-                            //  selectedProject = this.value;
-                            //  reloadTable();
-                        } else {
-
-                        }
-                    });
-                    inputLanguage.val("").trigger("change");
-                }
-                function loadEditBtnLanguage() {
-                    inputLang.select2({
-                        tags: true,
-                        data: languages,
-                        placeholder: "Select Language",
-//                        minimumResultsForSearch: "Infinity",
-                        allowClear: true,
-//                        escapeMarkup: function (markup) {
-//                            return markup; // let our custom formatter work
-//                        },
-//                        templateResult: function (repo) {
-//                            if (repo.loading)
-//                                return repo.text;
-//                            return repo.language;
-//                        },
-//                        templateSelection: function (repo) {
-//                            return repo.language || repo.text;
-//                        }
-                    }).on("change", function (e) {
-                        if (typeof this.value !== "undefined"
-                                && this.value !== '') {
-                            //  selectedProject = this.value;
-                            //  reloadTable();
-                        } else {
-
-                        }
-                    });
-                    inputLang.val("").trigger("change");
-                }
-
-
+            $("#submitEditData").on("click", function () {
+                $.ajax({
+                    type: "POST",
+                    url: "../dashboard?action=updateAnalyticsData",
+                    data: new FormData($('form#editData')[0]),
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json'
+                })
+                        .done(function (data, textStatus, jqXHR) {
+                            var response = data;
+                            if (response.result === "error") {
+                                ajaxHandleError(response);
+                            } else {
+                                ajaxHandleSuccess(response);
+                                $("#modalEditData").modal('hide');
+                                table.ajax.reload();
+                            }
+                        })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+                            var respJson = JSON.parse(jqXHR.responseText);
+                            var response = jQuery.parseJSON(respJson);
+                            $.alert(response.errorMsg, "Error !!");
+                        });
             });
+
+            $("#submitDisableData").on("click", function () {
+                $.ajax({
+                    type: "POST",
+                    url: "../dashboard?action=disableData",
+                    data: $("form#disableData").serialize(),
+                    dataType: 'json'
+                })
+                        .done(function (data, textStatus, jqXHR) {
+                            var response = data;
+                            if (response.result === "error") {
+                                ajaxHandleError(response);
+                            } else {
+                                ajaxHandleSuccess(response);
+                                $("#modalDisableData").modal('hide');
+                                table.ajax.reload();
+                            }
+                        })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+                            var respJson = JSON.parse(jqXHR.responseText);
+                            var response = jQuery.parseJSON(respJson);
+                            $.alert(response.errorMsg, "Error !!");
+                        });
+            });
+
+            //  $("#btnSubmitSendEmail").on("click", function () {
+            function submitSendEmail() {
+                $.ajax({
+                    type: "POST",
+                    url: "../dashboard?action=sendEmail",
+                    data: $("form#sendEmail").serialize(),
+                    dataType: 'json'
+                })
+                        .done(function (data, textStatus, jqXHR) {
+                            var response = data;
+                            if (response.result === "error") {
+                                ajaxHandleError(response);
+                            } else {
+                                ajaxHandleSuccess(response);
+                                $("#modalSendEmail").modal('hide');
+                                table.ajax.reload();
+                            }
+                        })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+                            var respJson = JSON.parse(jqXHR.responseText);
+                            var response = jQuery.parseJSON(respJson);
+                            $.alert(response.errorMsg, "Error !!");
+                        });
+            }
+            //  });
+
+            var sendEmaill = sendEmail.validate({
+                //        debug: true,
+                focusCleanup: true,
+                rules: {
+                    inputFromDate: {
+                        required: true
+
+                    },
+                    inputToDate: {
+                        required: true
+
+                    },
+                    inputEmailAddress: {
+                        required: true
+
+                    }
+
+                },
+                messages: {
+                    inputFromDate: {
+                        equalTo: "Date is Mandatory"
+                    },
+                    inputToDate: {
+                        equalTo: "Date is Mandatory"
+                    },
+                    inputEmailAddress: {
+                        equalTo: "Email Address is Mandatory"
+
+                    }
+                },
+                highlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                },
+                success: function (element) {
+                    $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                },
+                submitHandler: function (form) {
+                    submitSendEmail();
+                }
+            });
+
+            var createDataa = createData.validate({
+                //        debug: true,
+                focusCleanup: true,
+                rules: {
+                    inputLanguage: {
+                        required: true
+                    }
+                },
+                messages: {
+                    inputLanguage: {
+                        equalTo: "Language is Mandatory"
+                    }
+                },
+                highlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                },
+                success: function (element) {
+                    $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                },
+                submitHandler: function (form) {
+                    submitCreateData();
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "../dashboard?action=listDistinctLanguages",
+                dataType: 'json'
+            })
+                    .done(function (data, textStatus, jqXHR) {
+                        var response = data;
+                        if (response.result === "error") {
+                            ajaxHandleError(response);
+                        } else {
+                            languages = data.data;
+                            loadAddBtnLanguage();
+                            loadEditBtnLanguage();
+                            loadSendEmailBtnLanguage();
+                        }
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        var respJson = JSON.parse(jqXHR.responseText);
+                        var response = jQuery.parseJSON(respJson);
+                        $.alert(response.errorMsg, "Error !!");
+                    });
+
+            function loadSendEmailBtnLanguage() {
+                selectLanguage.select2({
+                    data: languages,
+                    placeholder: "Select Language",
+                    //  minimumResultsForSearch: "Infinity",
+                    allowClear: true,
+//                        escapeMarkup: function (markup) {
+//                            return markup; // let our custom formatter work
+//                        },
+//                        templateResult: function (repo) {
+//                            if (repo.loading)
+//                                return repo.text;
+//                            return repo.language;
+//                        },
+//                        templateSelection: function (repo) {
+//                            return repo.language || repo.text;
+//                        }
+                }).on("change", function (e) {
+                    if (typeof this.value !== "undefined"
+                            && this.value !== '') {
+                        //  selectedProject = this.value;
+                        //  reloadTable();
+                    } else {
+
+                    }
+                });
+                selectLanguage.val("").trigger("change");
+            }
+
+            function loadAddBtnLanguage() {
+                inputLanguage.select2({
+                    tags: true,
+                    data: languages,
+                    placeholder: "Select Language",
+//                        minimumResultsForSearch: "Infinity",
+                    allowClear: true,
+//                        escapeMarkup: function (markup) {
+//                            return markup; // let our custom formatter work
+//                        },
+//                        templateResult: function (repo) {
+//                            if (repo.loading)
+//                                return repo.text;
+//                            return repo.language;
+//                        },
+//                        templateSelection: function (repo) {
+//                            return repo.language || repo.text;
+//                        }
+                }).on("change", function (e) {
+                    if (typeof this.value !== "undefined"
+                            && this.value !== '') {
+                        //  selectedProject = this.value;
+                        //  reloadTable();
+                    } else {
+
+                    }
+                });
+                inputLanguage.val("").trigger("change");
+            }
+            function loadEditBtnLanguage() {
+                inputLang.select2({
+                    tags: true,
+                    data: languages,
+                    placeholder: "Select Language",
+//                        minimumResultsForSearch: "Infinity",
+                    allowClear: true,
+//                        escapeMarkup: function (markup) {
+//                            return markup; // let our custom formatter work
+//                        },
+//                        templateResult: function (repo) {
+//                            if (repo.loading)
+//                                return repo.text;
+//                            return repo.language;
+//                        },
+//                        templateSelection: function (repo) {
+//                            return repo.language || repo.text;
+//                        }
+                }).on("change", function (e) {
+                    if (typeof this.value !== "undefined"
+                            && this.value !== '') {
+                        //  selectedProject = this.value;
+                        //  reloadTable();
+                    } else {
+
+                    }
+                });
+                inputLang.val("").trigger("change");
+            }
+            // });
         </script> 
 
     </body>
