@@ -120,6 +120,7 @@ public class DashboardServlet extends HttpServlet {
             Integer id = 0;
             Timestamp inptFrom = null;
             Timestamp inptTo = null;
+            List<String> customers = new ArrayList<>();
             try {
                 switch (action) {
                     case "getProject":
@@ -431,9 +432,10 @@ public class DashboardServlet extends HttpServlet {
                         }
                         jsonArray = gson.toJson(bcd);
                         break;
-                    case "listCustomersByContext":
-                        datas = dashboardDao.getDistinctCustomers();
-                        jsonArray = gson.toJson(datas);                       
+                    case "listCustomersForData":
+                        customers = dashboardDao.getDistinctCustomers();
+                        jsonArray = gson.toJson(customers);
+                        jsonArray = "{\n\"customers\":\n" + jsonArray + "\n}";
                         break;
                     case "sendEmail":
                         to = request.getParameter("inputEmailAddress");
@@ -847,7 +849,7 @@ public class DashboardServlet extends HttpServlet {
             data.setNewsDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
         }
         data.setNewsPaper(request.getParameter("inputNewsPaper"));
-        data.setLanguage(request.getParameter("inputLang"));
+        data.setLanguage(request.getParameter("inputLanguage"));
         data.setHeadline(request.getParameter("inputHeadline"));
         data.setEdition(request.getParameter("inputEdition"));
         data.setSupplement(request.getParameter("inputSupplement"));

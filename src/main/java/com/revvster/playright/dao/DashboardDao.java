@@ -67,10 +67,8 @@ public interface DashboardDao {
     
     public List<Data> getDataByCustomer(User loggedInUser, String customer) throws SQLException;
     
-    public List<String> getDistinctLanguage()
-            throws SQLException;   
-    public List<Data> getDistinctCustomers()
-            throws SQLException; 
+    public List<String> getDistinctLanguage() throws SQLException;   
+    public List<String> getDistinctCustomers() throws SQLException; 
    
     public void deleteData(Integer id) throws SQLException;
     

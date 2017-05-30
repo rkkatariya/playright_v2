@@ -736,24 +736,21 @@ public class DashboardDaoImpl extends DaoHelper implements DashboardDao {
     }
 
     @Override
-    public List<Data> getDistinctCustomers()
+    public List<String> getDistinctCustomers()
             throws SQLException {
         logger.debug("getDistinctCustomers::START::");
-        List<Data> datas = new ArrayList<>();
+        List<String> customers = new ArrayList<>();
         PreparedStatement ps;
-        ps = conn.prepareStatement("SELECT distinct ad.customer , ad.*\n"
-                + "FROM analytics_data ad \n"
-                + "group by ad.customer");
+        ps = conn.prepareStatement("SELECT distinct customer FROM analytics_data where customer is not null order by customer");
         // ps.setInt(1, customer);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            Data p = getDataObj(rs);
-            datas.add(p);
+            customers.add(rs.getString("customer"));
         }
         close(rs);
         close(ps);
         logger.debug("getDistinctCustomers::END");
-        return datas;
+        return customers;
     }
 
     @Override

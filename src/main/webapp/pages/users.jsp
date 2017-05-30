@@ -44,7 +44,9 @@
         <jsp:include page="header.jsp"/>
         <!-- DataTables -->
         <jsp:include page="datatables_css.jsp"/>
-
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css">
+        <link rel="stylesheet" href="../adminlte2/bootstrap/css/bootstrap.min.css">         
         <link rel="stylesheet" href="../adminlte2/plugins/select2/select2.min.css">
         <link rel="stylesheet" href="../adminlte2/plugins/select2/select2-bootstrap.min.css">
         <link rel="stylesheet" href="../DataTables/Buttons-1.1.0/css/buttons.dataTables.min.css">
@@ -399,11 +401,6 @@
                                 loadUsersForCompany();
 
                             });
-
-                            toggleEditUserBtn();
-                            toggleDisableUsersBtn();
-
-
                         } else if (data["roleName"] === "Manager") {
                             $('#hideForManager').show();
                             $('#hideForSalesrep').hide();
@@ -424,10 +421,21 @@
                                 loadUsersForCompany();
 
                             });
-                            toggleEditUserBtn();
-                            toggleDisableUsersBtn();
-
+                        } else if (data !== null) {
+                            if ($(this).hasClass('active')) {
+                                $(this).removeClass('active');
+                                selectedCompany = 0;
+                                selectedUsr = 0;
+                            } else {
+                                table.$('tr.active').removeClass('active');
+                                $(this).addClass('active');
+                                selectedCompany = data["company"];
+                                selectedUsr = data["id"];
+                            }
                         }
+                        
+                        toggleEditUserBtn();
+                        toggleDisableUsersBtn();                        
 //                        else if (data !== null) {
 //                             $('#moveCust').text('Warning!..Before disabling make sure to move all the customers');
 //                        } else {

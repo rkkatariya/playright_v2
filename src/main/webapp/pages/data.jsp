@@ -23,27 +23,13 @@
         user = (User) session.getAttribute(SystemConstants.LoggedInUser);
     }
 
-//    RoleEntContext addCtx = null;
-//    RoleEntContext editCtx = null;
-//    RoleEntContext deleteCtx = null;
-//
-//    if (user.getUserEntitlements() != null) {
-//        List<UserEntitlement> ues = user.getUserEntitlements();
-//        addCtx = AuthorizationManager.getRoleEntContext(ues,
-//                new UserEntitlement(Resource.user, Action.add));
-//
-//        editCtx = AuthorizationManager.getRoleEntContext(ues,
-//                new UserEntitlement(Resource.user, Action.update));
-//        deleteCtx = AuthorizationManager.getRoleEntContext(ues,
-//                new UserEntitlement(Resource.user, Action.delete));
-//    }
 %>
 <html lang="en">
     <head>     
         <title>Data</title>
 
         <jsp:include page="header.jsp"/>
-        <%--<jsp:include page="datatables_css.jsp"/>--%>
+        <jsp:include page="datatables_css.jsp"/>
 
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css">
@@ -97,19 +83,22 @@
                         <form role="form" id="createData">                           
 
                             <div class="box-body">
-                                <div class="col-sm-5">
-                                    <div class="form-group">
-                                        <label for="inputNewsDate">News Date</label>
-                                        <div class="input-group date">
-                                            <input type="text" class="form-control" id="inputNewsDate" name="inputNewsDate" data-provide="datepicker">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-5">                                    
                                     <div class="form-group">
                                         <label for="inputCustomer">Customer</label>
-                                        <input type="text" class="form-control" id="inputCustomer" name="inputCustomer" placeholder="Customer">
+                                        <select id="inputCustomer" name="inputCustomer" class="form-control" style="width: 100%;" >
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputNewsDate">News Date</label> 
+                                        <button type="button" class="btn btn-xs btn-warning" id="prevDayBtn">  <i class="fa fa-calendar-minus-o" data-toggle="tooltip" title="Previous Day"></i></button>
+                                        <button type="button" class="btn btn-xs btn-primary" id="todayBtn">  <i class="fa fa-calendar-check-o" data-toggle="tooltip" title="Today"></i></button>
+                                        <div class="input-group date" id="newsDateDiv">
+                                            <input type="text" class="form-control" id="inputNewsDate" name="inputNewsDate">
+                                            <span class="input-group-addon">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </span>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="inputNewsPaper">News Paper</label>
@@ -120,21 +109,6 @@
                                         <select id="inputLanguage" name="inputLanguage" class="form-control" style="width: 100%;" >
                                         </select>                            
                                     </div>
-                                    <!--                                    <div class="form-group">
-                                                                            <label for="inputLanguage">Language</label>
-                                                                            <select id="inputLanguage" name="inputLanguage" class="js-example-tags" style="width: 100%;" >
-                                                                                <option value="">Select Language</option>
-                                                                                <option value="English">English</option>
-                                                                                <option value="Kannada">Kannada</option>
-                                                                                <option value="Telugu">Telugu</option>
-                                                                                <option value="Urdu">Urdu</option>
-                                                                                <option value="Malayalam">Malayalam</option>
-                                                                                <option value="Marathi">Marathi</option>
-                                                                                <option value="Hindi">Hindi</option>
-                                                                                <option value="Tamil">Tamil</option>
-                                                                                <option value="Bengali">Bengali</option>                                            
-                                                                            </select>                            
-                                                                        </div>-->
                                     <div class="form-group">
                                         <label for="inputHeadline">Headline</label>
                                         <input type="text" class="form-control" id="inputHeadline" name="inputHeadline" placeholder="Headline">
@@ -208,7 +182,6 @@
                                     <div class="form-group">
                                         <label for="inputImage">Image</label>
                                         <input type="file" name="inputImage" id="inputImage" accept="image/*">
-                                        <!--<p class="help-block"></p>-->
                                     </div>
                                 </div>
                             </div>
@@ -225,15 +198,11 @@
                                 <div class="col-sm-3">                            
                                 </div>
                             </div>
-
-
                         </form>
 
                     </div>
                     <div class="modal-footer">
-
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-
                     </div>
                 </div>
             </div>
@@ -254,25 +223,26 @@
                                     <input type="hidden" id="inputFileSize" name="inputFileSize"  class="form-control">
                                     <input type="hidden" id="inputFileType" name="inputFileType"  class="form-control">
                                     <div class="form-group">
-                                        <label for="inputNewsDate">News Date</label>
-                                        <div class="input-group date">
-                                            <input type="text" class="form-control" id="inputNewsDate" name="inputNewsDate" data-provide="datepicker">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </div>
-                                        </div>
+                                        <label for="inputCustomer">Customer</label>
+                                        <select id="inputCustomer" name="inputCustomer" class="form-control" style="width: 100%;" >
+                                        </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="inputCustomer">Customer</label>
-                                        <input type="text" class="form-control" id="inputCustomer" name="inputCustomer" placeholder="Customer">
+                                        <label for="inputNewsDate">News Date</label>
+                                        <div class="input-group date" id="newsDateDiv">
+                                            <input type="text" class="form-control" id="inputNewsDate" name="inputNewsDate">
+                                            <span class="input-group-addon">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </span>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="inputNewsPaper">News Paper</label>
                                         <input type="text" class="form-control" id="inputNewsPaper" name="inputNewsPaper" placeholder="News Paper">
                                     </div>                                    
                                     <div class="form-group">
-                                        <label for="inputLang">Language</label>
-                                        <select id="inputLang" name="inputLang" class="form-control" style="width: 100%;" >
+                                        <label for="inputLanguage">Language</label>
+                                        <select id="inputLanguage" name="inputLanguage" class="form-control" style="width: 100%;" >
                                         </select>                            
                                     </div>
                                     <div class="form-group">
@@ -348,19 +318,16 @@
                                     <div class="form-group">
                                         <label for="inputImage">Image</label>
                                         <input type="file" name="inputImage" id="inputImage" accept="image/*">
-                                        <!--<p class="help-block"></p>-->
                                     </div>
                                 </div>
-
                             </div>
 
                             <div class="row">
                                 <div class="col-sm-3">                            
                                 </div>
                                 <div class="col-sm-3"> 
-                                    <button type="button" class="btn btn-primary pull-right" id="submitEditData">Submit</button>
+                                    <button type="submit" class="btn btn-primary pull-right" id="submitEditData">Submit</button>
                                 </div>
-
                                 <div class="col-sm-3">                            
                                 </div>
                             </div>
@@ -368,9 +335,7 @@
 
                     </div>
                     <div class="modal-footer">
-
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-
                     </div>
                 </div>
             </div>
@@ -386,8 +351,6 @@
                         <div id="disableData">Are you sure do you want to delete this data?</div>
                         <form role="form" id="disableData">  
                             <input type="hidden" id="inputId" name="inputId"  class="form-control">
-                            <!--                            <input type="hidden" id="inputId" name="inputId"  class="form-control">
-                                                        <input type="hidden" id="inputActive" name="inputActive"  class="form-control">                             -->
                         </form>                       
                     </div>
                     <div class="modal-footer">                        
@@ -422,7 +385,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="inputCustomer">Customer</label>
-                                        <input type="text" class="form-control" id="inputCustomer" name="inputCustomer" placeholder="Customer">
+                                        <select id="inputCustomer" name="inputCustomer" class="form-control" style="width: 100%;" >
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="selectLanguage">Language</label>
@@ -441,15 +405,6 @@
                                         <label for="inputNewsPaper">News Paper</label>
                                         <input type="text" class="form-control" id="inputNewsPaper" name="inputNewsPaper" placeholder="News Paper">
                                     </div>                                    
-                                    <!--                                    <div class="form-group">                                        
-                                                                            <label for="inputImageExists">Image</label>
-                                                                            <select id="inputImageExists" name="inputImageExists" class="form-control" style="width: 100%;" >
-                                                                                <option value="">Select Filter</option>
-                                                                                <option value="Y">With Image</option>
-                                                                                <option value="N">Without Image</option>
-                                                                                                                            <option value="">Both</option>                                                                                      
-                                                                            </select>
-                                                                        </div>-->
                                     <div class="form-group">
                                         <label for="inputImageExists" class="control-label">Image Exists</label>
                                         <div class="radio">                                       
@@ -479,10 +434,6 @@
                                         <input type="text" class="form-control" id="inputSubject" name="inputSubject" placeholder="Subject">
                                     </div>                                                    
                                 </div>
-                                <!--                                <div>
-                                                                    <button type="submit" class="btn btn-primary" id="btnSubmitSendEmail">Submit</button>
-                                                                </div>-->
-
                             </div>
                             <div class="row">
                                 <div class="col-sm-3">                            
@@ -600,7 +551,6 @@
 
         <jsp:include page="control_sidebar.jsp"/>
         <jsp:include page="footer.jsp"/>
-        <%--<jsp:include page="datatables_js.jsp"/>--%>
         <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
         <script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
@@ -610,16 +560,11 @@
         <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
         <script src="../adminlte2/plugins/select2/select2.full.min.js"></script>
         <script src="../adminlte2/plugins/datepicker/js/bootstrap-datepicker.min.js"></script>  
-        <!--        <script src="../adminlte2/plugins/datatables/extensions/jszip/jszip.min.js"></script> 
-                <script src="../DataTables/Buttons-1.1.0/js/buttons.html5.min.js"></script>
-                <script src="../DataTables/Buttons-1.1.0/js/buttons.print.min.js"></script>
-                <script src="../DataTables/Buttons-1.1.0/js/buttons.colVis.min.js"></script>-->
-        <script src="../adminlte2/plugins/datepicker/js/bootstrap-datepicker.min.js"></script>
         <script src="../jquery-validation/js/jquery.validate.min.js"></script>
         <script src="../jquery-validation/js/additional-methods.min.js"></script>
         <jsp:include page="adminlte_js.jsp"/>
         <script type="text/javascript">
-            var table;
+            var tableData;
             var tableEmail;
             var emailBody = '';
             var selectedData = 0;
@@ -632,23 +577,35 @@
             var inputNewsDate = $("#inputNewsDate");
             var sendEmail = $('form#sendEmail');
             var createData = $('form#createData');
+            var editData = $('form#editData');
             var selectLanguage = $("#selectLanguage");
-            var inputLanguage = $("#inputLanguage");
-            var inputLang = $("#inputLang");
-            //      $(function () {                
+            var inputAddBtnLanguage = $("form#createData :input[id=inputLanguage]");
+            var inputEditBtnLanguage = $("form#editData :input[id=inputLanguage]");
+            var inputAddBtnCustomer = $("form#createData :input[id=inputCustomer]");
+            var inputEditBtnCustomer = $("form#editData :input[id=inputCustomer]");
+            var inputEmailBtnCustomer = $("form#sendEmail :input[id=selectCustomer]");
+            var languages;
+            var customers;
+            
+            loadTableData();
+            
+            $('[data-toggle="tooltip"]').tooltip();   
+            
             $.ajax({
                 type: "GET",
-                url: '../dashboard?action=listCustomersByContext',
+                url: '../dashboard?action=listCustomersForData',
                 dataType: 'json'
             })
                     .done(function (data, textStatus, jqXHR) {
                         var response = data;
-                        //console.log(data);
                         if (response.result === "error") {
                             ajaxHandleError(response);
                         } else {
-                            customersData = data;
-                            loadCustomers();
+                            customersData = data.customers;
+                            loadCustomersFilter();
+                            loadAddBtnCustomers();
+                            loadEditBtnCustomers();
+                            loadCustomersFilterEmail();
                         }
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
@@ -657,46 +614,71 @@
                         $.alert(response.errorMsg, "Error !!");
                     });
 
-            function loadCustomers() {
-                selectCustomer.select2({
+            function loadAddBtnCustomers() {
+                inputAddBtnCustomer.select2({
+                    data: customersData,
+                    placeholder: "Customer",
+                    allowClear: true
+                });
+            }
+            
+            function loadEditBtnCustomers() {
+                inputEditBtnCustomer.select2({
+                    data: customersData,
+                    placeholder: "Customer",
+                    allowClear: true
+                });
+            }
+            
+            
+            function loadCustomersFilterEmail() {
+                inputEmailBtnCustomer.select2({
                     data: customersData,
                     placeholder: "Select Customer",
-                    minimumResultsForSearch: "Infinity",
+                    allowClear: true
+                });
+            }
+            
+            function loadCustomersFilter() {
+                selectCustomer.select2({
+                    data: customersData,
+                    placeholder: "Select a Customer",
                     allowClear: true,
-                    escapeMarkup: function (markup) {
-                        return markup; // let our custom formatter work
-                    },
-                    templateResult: function (repo) {
-                        if (repo.loading)
-                            return repo.text;
-                        return repo.customer;
-                    },
-                    templateSelection: function (repo) {
-                        return repo.customer || repo.text;
-                    }
                 }).on("change", function (e) {
                     if (typeof this.value !== "undefined"
                             && this.value !== '') {
-                        selectedCustomer = $("#selectCustomer").select2('data')[0]["customer"];
-                     //   console.log(selectedCustomer);
-                        table.ajax.reload(false);
-                        // loadTableData();                       
+                        selectedCustomer = $("#selectCustomer").val();
+                        inputAddBtnCustomer.val(selectedCustomer).trigger("change");
+                        inputEditBtnCustomer.val(selectedCustomer).trigger("change");    
+                        inputEmailBtnCustomer.val(selectedCustomer).trigger("change");                        
+                        tableData.ajax.reload(false);
+                        enableButtons();
                     } else {
-                        if (selectedCustomer !== "") {
-                            selectedCustomer = null;
-
-                        }
-
+                        selectedCustomer = "";
+                        disableButtons();
                     }
-
+                    toggleDisableDataBtn();
+                    toggleEditDataBtn();
                 });
-                loadTableData();
                 selectCustomer.val("").trigger("change");
-
+            }
+            
+            function disableButtons() {
+                $('#btnCreateData').prop('disabled', true);
+                $('#btnEditData').prop('disabled', true);
+                $('#btnDisableData').prop('disabled', true);
+                $('#btnSendEmail').prop('disabled', true);
+            }
+            
+            function enableButtons() {
+                $('#btnCreateData').prop('disabled', false);
+                $('#btnEditData').prop('disabled', false);
+                $('#btnDisableData').prop('disabled', false);
+                $('#btnSendEmail').prop('disabled', false);
             }
 
             function loadTableData() {
-                table = $('#list_data').DataTable({
+                tableData = $('#list_data').DataTable({
                     "paging": true,
                     "responsive": true,
                     "processing": true,
@@ -786,12 +768,13 @@
                     ]
 
                 });
+                
                 $('#list_data tbody').on('click', 'tr', function () {
-                    var data = table.row(this).data();
+                    var data = tableData.row(this).data();
                     if ($(this).hasClass('active')) {
                         $(this).removeClass('active');
                     } else {
-                        table.$('tr.active').removeClass('active');
+                        tableData.$('tr.active').removeClass('active');
                         $(this).addClass('active');
                         if (typeof data !== "undefined") {
                             selectedData = data["id"];
@@ -810,7 +793,8 @@
                     var title = $('#list_data thead th').eq($(this).index()).text();
                     $(this).html('<input type="text" placeholder="Search ' + title + '" />');
                 });
-                table.columns().every(function () {
+                
+                tableData.columns().every(function () {
                     var that = this;
 
                     $('input', this.footer()).on('keyup change', function () {
@@ -822,45 +806,37 @@
             }
 
             $("#resetCreateData").click(function () {
-                // createUserForm.validate().resetForm();
                 $('form#createData .form-group').removeClass('has-error has-feedback has-success');
-                //                cInputManager.select2("val", "");
-                //                cInputManager.empty();
-                //                cInputCompany.select2("val", "");
-                //                cInputCompany.empty();
-                //                cInputManager.prop("disabled", true);
-                //                cInputCompany.prop("disabled", true);
+                newsDateAddObj.datepicker("update", "");
             });
-
-            $("form#createData #inputNewsDate").datepicker({
+            
+            var newsDateAddObj = $("form#createData #newsDateDiv").datepicker({
                 format: "dd-mm-yyyy",
                 endDate: "0d",
                 todayHighlight: true,
                 autoclose: true
             });
 
-            $("form#editData #inputNewsDate").datepicker({
+            var newsDateEditObj = $("form#editData #newsDateDiv").datepicker({
                 format: "dd-mm-yyyy",
                 endDate: "0d",
                 todayHighlight: true,
                 autoclose: true
             });
-
-//                inputFromDate.datepicker({
-//                    format: "dd-mm-yyyy",
-//                    endDate: "0d",
-//                    todayHighlight: true,
-//                    autoclose: true
-//                });
-//
-//                inputToDate.datepicker({
-//                    format: "dd-mm-yyyy",
-//                    startDate: "-6m",
-//                    endDate: "0d",
-//                    todayHighlight: true,
-//                    autoclose: true
-//                });
-
+            
+            $("form#createData #todayBtn").click(function () {
+                newsDateAddObj.datepicker("update", convertDate(null, true));
+            });
+//            
+            $("form#createData #prevDayBtn").click(function () {
+                if (newsDateAddObj.datepicker("getDate") !== "" &&
+                        newsDateAddObj.datepicker("getDate") !== null) {
+                    newsDateAddObj.datepicker("update", convertDate(new Date(newsDateAddObj.datepicker("getDate").getTime() - (60 * 60 * 24 * 1000))));
+                } else {
+                    newsDateAddObj.datepicker("update", convertDate(new Date(new Date().getTime() - (60 * 60 * 24 * 1000))));
+                }
+            });
+            
             var _startDate = new Date(); //todays date
             var _endDate = new Date(_startDate.getTime() + (24 * 60 * 60 * 1000)); //plus 1 day
             inputFromDate.datepicker({
@@ -881,7 +857,7 @@
             });
 
             function toggleEditDataBtn() {
-                if (table.rows('.active').data().length === 1) {
+                if (tableData.rows('.active').data().length === 1) {
                     $('#btnEditData').prop('disabled', false);
                 } else {
                     $('#btnEditData').prop('disabled', true);
@@ -889,19 +865,20 @@
             }
 
             function toggleDisableDataBtn() {
-                if (table.rows('.active').data().length === 1) {
+                if (tableData.rows('.active').data().length === 1) {
                     $('#btnDisableData').prop('disabled', false);
                 } else {
                     $('#btnDisableData').prop('disabled', true);
                 }
             }
             $('button#btnEditData').click(function () {
-                var data = table.row('.active').data();
+                $('form#editData .form-group').removeClass('has-error has-feedback has-success');
+                var data = tableData.row('.active').data();
                 // console.log(data["imageExists"]);
                 $("form#editData :input[id=inputId]").val(data["id"]);
-                $("form#editData :input[id=inputNewsDate]").val(convertDate(data["newsDate"]));
+                newsDateEditObj.datepicker("update", convertDate(data["newsDate"]));
                 $("form#editData :input[id=inputNewsPaper]").val(data["newsPaper"]);
-                $("form#editData :input[id=inputLang]").val(data["language"]);
+                $("form#editData :input[id=inputLanguage]").val(data["language"]).trigger("change");
                 $("form#editData :input[id=inputHeadline]").val(data["headline"]);
                 $("form#editData :input[id=inputEdition]").val(data["edition"]);
                 $("form#editData :input[id=inputSupplement]").val(data["supplement"]);
@@ -921,7 +898,6 @@
                 //  console.log(data["language"]);
             });
 
-            //   $("#submitCreateData").on("click", function () {
             function submitCreateData() {
                 $.ajax({
                     type: "POST",
@@ -939,7 +915,12 @@
                             } else {
                                 ajaxHandleSuccess(response);
                                 $("#modalCreateData").modal('hide');
-                                table.ajax.reload();
+                                tableData.ajax.reload();
+                                $('form#createData .form-group').removeClass('has-error has-feedback has-success');
+                                createData.each(function(){
+                                    this.reset();
+                                });
+                                newsDateAddObj.datepicker("update", "");
                             }
                         })
                         .fail(function (jqXHR, textStatus, errorThrown) {
@@ -947,10 +928,9 @@
                             var response = jQuery.parseJSON(respJson);
                             $.alert(response.errorMsg, "Error !!");
                         });
-                //  });
             }
 
-            $("#submitEditData").on("click", function () {
+            function submitEditData() {
                 $.ajax({
                     type: "POST",
                     url: "../dashboard?action=updateAnalyticsData",
@@ -966,7 +946,12 @@
                             } else {
                                 ajaxHandleSuccess(response);
                                 $("#modalEditData").modal('hide');
-                                table.ajax.reload();
+                                tableData.ajax.reload();
+                                $('form#editData .form-group').removeClass('has-error has-feedback has-success');
+                                editData.each(function(){
+                                    this.reset();
+                                });
+                                newsDateEditObj.datepicker("update", "");
                             }
                         })
                         .fail(function (jqXHR, textStatus, errorThrown) {
@@ -974,7 +959,7 @@
                             var response = jQuery.parseJSON(respJson);
                             $.alert(response.errorMsg, "Error !!");
                         });
-            });
+            }
 
             $("#submitDisableData").on("click", function () {
                 $.ajax({
@@ -990,7 +975,10 @@
                             } else {
                                 ajaxHandleSuccess(response);
                                 $("#modalDisableData").modal('hide');
-                                table.ajax.reload();
+                                tableData.ajax.reload();
+                                sendEmail.each(function(){
+                                    this.reset();
+                                });
                             }
                         })
                         .fail(function (jqXHR, textStatus, errorThrown) {
@@ -1000,7 +988,6 @@
                         });
             });
 
-            //  $("#btnSubmitSendEmail").on("click", function () {
             function submitSendEmail() {
                 $.ajax({
                     type: "POST",
@@ -1015,7 +1002,7 @@
                             } else {
                                 ajaxHandleSuccess(response);
                                 $("#modalSendEmail").modal('hide');
-                                table.ajax.reload();
+                                tableData.ajax.reload();
                             }
                         })
                         .fail(function (jqXHR, textStatus, errorThrown) {
@@ -1027,7 +1014,6 @@
             //  });
 
             var sendEmaill = sendEmail.validate({
-                //        debug: true,
                 focusCleanup: true,
                 rules: {
                     inputFromDate: {
@@ -1040,9 +1026,10 @@
                     },
                     inputEmailAddress: {
                         required: true
-
+                    },
+                    inputCustomer: {
+                        required: true
                     }
-
                 },
                 messages: {
                     inputFromDate: {
@@ -1053,7 +1040,9 @@
                     },
                     inputEmailAddress: {
                         equalTo: "Email Address is Mandatory"
-
+                    },
+                    inputCustomer: {
+                        equalTo: "Customer is Mandatory"
                     }
                 },
                 highlight: function (element) {
@@ -1068,16 +1057,21 @@
             });
 
             var createDataa = createData.validate({
-                //        debug: true,
                 focusCleanup: true,
                 rules: {
                     inputLanguage: {
+                        required: true
+                    },
+                    inputCustomer: {
                         required: true
                     }
                 },
                 messages: {
                     inputLanguage: {
                         equalTo: "Language is Mandatory"
+                    },
+                    inputCustomer: {
+                        equalTo: "Customer is Mandatory"
                     }
                 },
                 highlight: function (element) {
@@ -1088,6 +1082,35 @@
                 },
                 submitHandler: function (form) {
                     submitCreateData();
+                }
+            });
+            
+            var editDataa = editData.validate({
+                focusCleanup: true,
+                rules: {
+                    inputLanguage: {
+                        required: true
+                    },
+                    inputCustomer: {
+                        required: true
+                    }
+                },
+                messages: {
+                    inputLanguage: {
+                        equalTo: "Language is Mandatory"
+                    },
+                    inputCustomer: {
+                        equalTo: "Customer is Mandatory"
+                    }
+                },
+                highlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                },
+                success: function (element) {
+                    $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                },
+                submitHandler: function (form) {
+                    submitEditData();
                 }
             });
 
@@ -1117,88 +1140,28 @@
                 selectLanguage.select2({
                     data: languages,
                     placeholder: "Select Language",
-                    //  minimumResultsForSearch: "Infinity",
-                    allowClear: true,
-//                        escapeMarkup: function (markup) {
-//                            return markup; // let our custom formatter work
-//                        },
-//                        templateResult: function (repo) {
-//                            if (repo.loading)
-//                                return repo.text;
-//                            return repo.language;
-//                        },
-//                        templateSelection: function (repo) {
-//                            return repo.language || repo.text;
-//                        }
-                }).on("change", function (e) {
-                    if (typeof this.value !== "undefined"
-                            && this.value !== '') {
-                        //  selectedProject = this.value;
-                        //  reloadTable();
-                    } else {
-
-                    }
+                    allowClear: true
                 });
                 selectLanguage.val("").trigger("change");
             }
 
             function loadAddBtnLanguage() {
-                inputLanguage.select2({
+                inputAddBtnLanguage.select2({
                     tags: true,
                     data: languages,
                     placeholder: "Select Language",
-//                        minimumResultsForSearch: "Infinity",
-                    allowClear: true,
-//                        escapeMarkup: function (markup) {
-//                            return markup; // let our custom formatter work
-//                        },
-//                        templateResult: function (repo) {
-//                            if (repo.loading)
-//                                return repo.text;
-//                            return repo.language;
-//                        },
-//                        templateSelection: function (repo) {
-//                            return repo.language || repo.text;
-//                        }
-                }).on("change", function (e) {
-                    if (typeof this.value !== "undefined"
-                            && this.value !== '') {
-                        //  selectedProject = this.value;
-                        //  reloadTable();
-                    } else {
-
-                    }
+                    allowClear: true
                 });
-                inputLanguage.val("").trigger("change");
+                inputAddBtnLanguage.val("").trigger("change");
             }
             function loadEditBtnLanguage() {
-                inputLang.select2({
+                inputEditBtnLanguage.select2({
                     tags: true,
                     data: languages,
                     placeholder: "Select Language",
-//                        minimumResultsForSearch: "Infinity",
-                    allowClear: true,
-//                        escapeMarkup: function (markup) {
-//                            return markup; // let our custom formatter work
-//                        },
-//                        templateResult: function (repo) {
-//                            if (repo.loading)
-//                                return repo.text;
-//                            return repo.language;
-//                        },
-//                        templateSelection: function (repo) {
-//                            return repo.language || repo.text;
-//                        }
-                }).on("change", function (e) {
-                    if (typeof this.value !== "undefined"
-                            && this.value !== '') {
-                        //  selectedProject = this.value;
-                        //  reloadTable();
-                    } else {
-
-                    }
+                    allowClear: true
                 });
-                inputLang.val("").trigger("change");
+                inputEditBtnLanguage.val("").trigger("change");
             }
             // });
         </script> 
