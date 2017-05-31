@@ -583,7 +583,7 @@
             var inputEditBtnLanguage = $("form#editData :input[id=inputLanguage]");
             var inputAddBtnCustomer = $("form#createData :input[id=inputCustomer]");
             var inputEditBtnCustomer = $("form#editData :input[id=inputCustomer]");
-            var inputEmailBtnCustomer = $("form#sendEmail :input[id=selectCustomer]");
+            var inputEmailBtnCustomer = $("form#sendEmail :input[id=inputCustomer]");
             var languages;
             var customers;
             
