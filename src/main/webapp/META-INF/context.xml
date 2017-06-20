@@ -2,9 +2,9 @@
 <Context antiJARLocking="true" path="/playright">
   <Resource auth="Container" defaultAutoCommit="true" driverClassName="com.mysql.jdbc.Driver" 
             factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" maxActive="20" maxIdle="10" maxWait="10000" 
-            initialSize="10" name="playrightDS" password="Play@123" type="javax.sql.DataSource" minIdle="10"
-            url="jdbc:mysql://localhost:3306/playright?zeroDateTimeBehavior=convertToNull&amp;useSSL=false" 
-            username="pruser" validationInterval="180" validationQuery="SELECT 1" removeAbandoned="true" 
+            initialSize="10" name="playrightDS" password="Pr1234" type="javax.sql.DataSource" minIdle="10"
+            url="jdbc:mysql://localhost:3306/playright_demo?zeroDateTimeBehavior=convertToNull&amp;useSSL=false" 
+            username="pruser" validationInterval="30000" validationQuery="SELECT 1" removeAbandoned="true" 
             timeBetweenEvictionRunsMillis="30000" removeAbandonedTimeout="60" logAbandoned="true" 
             minEvictableIdleTimeMillis="30000" testWhileIdle="true" testOnBorrow="true" testOnReturn="false"/>
 <!--Pr1234-->  

@@ -616,6 +616,7 @@
 
             function loadAddBtnCustomers() {
                 inputAddBtnCustomer.select2({
+                    tags: true,
                     data: customersData,
                     placeholder: "Customer",
                     allowClear: true
@@ -624,6 +625,7 @@
             
             function loadEditBtnCustomers() {
                 inputEditBtnCustomer.select2({
+                    tags: true,
                     data: customersData,
                     placeholder: "Customer",
                     allowClear: true
