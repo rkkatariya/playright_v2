@@ -814,14 +814,14 @@
             
             var newsDateAddObj = $("form#createData #newsDateDiv").datepicker({
                 format: "dd-mm-yyyy",
-                endDate: "0d",
+                endDate: "+1d",
                 todayHighlight: true,
                 autoclose: true
             });
 
             var newsDateEditObj = $("form#editData #newsDateDiv").datepicker({
                 format: "dd-mm-yyyy",
-                endDate: "0d",
+                endDate: "+1d",
                 todayHighlight: true,
                 autoclose: true
             });
